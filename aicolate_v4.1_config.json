@@ -1,0 +1,260 @@
+{
+  "workflow_name": "TikTok Shop EU Product Image Moderation v4.1",
+  "version": "v4.1",
+  "version_date": "2026-06-12",
+  "architecture": "3 Jurors + 1 Chief Judge (IPP Standard with PBR Integration)",
+  "github_repo": "https://github.com/danielwanyan/Bob_ProductID_newissue",
+  "raw_base_url": "https://raw.githubusercontent.com/danielwanyan/Bob_ProductID_newissue/main",
+  "pbr_integration": true,
+  "pbr_document": "[EMEA] [Listing] Shoptab Product Main Image Quality Vulgar Unified PBR",
+
+  "files": {
+    "judgment_criteria": {
+      "path": "judgment_criteria.md",
+      "raw_url": "https://raw.githubusercontent.com/danielwanyan/Bob_ProductID_newissue/main/judgment_criteria.md",
+      "description": "Main judgment criteria with 19 problem types and full PBR Rule 1-4 integration"
+    },
+    "juror_system_prompt": {
+      "path": "juror_system_prompt_v4.1.txt",
+      "raw_url": "https://raw.githubusercontent.com/danielwanyan/Bob_ProductID_newissue/main/juror_system_prompt_v4.1.txt",
+      "description": "Juror System Prompt with PBR rule citation requirement and {{body}} placeholder for rules"
+    },
+    "juror_user_prompt": {
+      "path": "juror_user_prompt_v4.1.txt",
+      "raw_url": "https://raw.githubusercontent.com/danielwanyan/Bob_ProductID_newissue/main/juror_user_prompt_v4.1.txt",
+      "description": "Juror User Prompt for 3-product batch review with PBR citation requirement"
+    },
+    "chief_judge_system_prompt": {
+      "path": "judge_system_prompt_v4.1.txt",
+      "raw_url": "https://raw.githubusercontent.com/danielwanyan/Bob_ProductID_newissue/main/judge_system_prompt_v4.1.txt",
+      "description": "Chief Judge System Prompt with weighted voting, type-specific thresholds, and PBR rule validation"
+    },
+    "chief_judge_user_prompt": {
+      "path": "judge_user_prompt_v4.1.txt",
+      "raw_url": "https://raw.githubusercontent.com/danielwanyan/Bob_ProductID_newissue/main/judge_user_prompt_v4.1.txt",
+      "description": "Chief Judge User Prompt with PBR rule check and structured JSON output"
+    }
+  },
+
+  "workflow_config": {
+    "nodes": {
+      "start": {
+        "type": "start",
+        "inputs": [
+          {"name": "product_id1", "type": "string"},
+          {"name": "product_id2", "type": "string"},
+          {"name": "product_id3", "type": "string"},
+          {"name": "product_image1", "type": "image"},
+          {"name": "product_image2", "type": "image"},
+          {"name": "product_image3", "type": "image"}
+        ]
+      },
+      "rules_fetch": {
+        "type": "http",
+        "url": "https://raw.githubusercontent.com/danielwanyan/Bob_ProductID_newissue/main/judgment_criteria.md",
+        "method": "GET",
+        "outputs": [{"name": "rules_text", "type": "string"}]
+      },
+      "juror_a": {
+        "type": "llm",
+        "model": "GPT-5.4",
+        "temperature": 0,
+        "max_tokens": 2000,
+        "timeout": 120,
+        "retry": 2,
+        "weight": 0.35,
+        "system_prompt_url": "https://raw.githubusercontent.com/danielwanyan/Bob_ProductID_newissue/main/juror_system_prompt_v4.1.txt",
+        "user_prompt_url": "https://raw.githubusercontent.com/danielwanyan/Bob_ProductID_newissue/main/juror_user_prompt_v4.1.txt",
+        "rules_url": "https://raw.githubusercontent.com/danielwanyan/Bob_ProductID_newissue/main/judgment_criteria.md",
+        "inputs": [
+          {"name": "Product_id1", "source": "start"},
+          {"name": "Product_id2", "source": "start"},
+          {"name": "Product_id3", "source": "start"},
+          {"name": "Product_image1", "source": "start"},
+          {"name": "Product_image2", "source": "start"},
+          {"name": "Product_image3", "source": "start"},
+          {"name": "body", "source": "rules_fetch.rules_text"}
+        ]
+      },
+      "juror_b": {
+        "type": "llm",
+        "model": "GPT-5.1",
+        "temperature": 0,
+        "max_tokens": 2000,
+        "timeout": 120,
+        "retry": 2,
+        "weight": 0.40,
+        "parallel_with": ["juror_a", "juror_c"],
+        "system_prompt_url": "https://raw.githubusercontent.com/danielwanyan/Bob_ProductID_newissue/main/juror_system_prompt_v4.1.txt",
+        "user_prompt_url": "https://raw.githubusercontent.com/danielwanyan/Bob_ProductID_newissue/main/juror_user_prompt_v4.1.txt",
+        "rules_url": "https://raw.githubusercontent.com/danielwanyan/Bob_ProductID_newissue/main/judgment_criteria.md",
+        "inputs": [
+          {"name": "Product_id1", "source": "start"},
+          {"name": "Product_id2", "source": "start"},
+          {"name": "Product_id3", "source": "start"},
+          {"name": "Product_image1", "source": "start"},
+          {"name": "Product_image2", "source": "start"},
+          {"name": "Product_image3", "source": "start"},
+          {"name": "body", "source": "rules_fetch.rules_text"}
+        ]
+      },
+      "juror_c": {
+        "type": "llm",
+        "model": "Gemini-2.5-Pro",
+        "temperature": 0,
+        "max_tokens": 2000,
+        "timeout": 120,
+        "retry": 2,
+        "weight": 0.25,
+        "parallel_with": ["juror_a", "juror_b"],
+        "system_prompt_url": "https://raw.githubusercontent.com/danielwanyan/Bob_ProductID_newissue/main/juror_system_prompt_v4.1.txt",
+        "user_prompt_url": "https://raw.githubusercontent.com/danielwanyan/Bob_ProductID_newissue/main/juror_user_prompt_v4.1.txt",
+        "rules_url": "https://raw.githubusercontent.com/danielwanyan/Bob_ProductID_newissue/main/judgment_criteria.md",
+        "inputs": [
+          {"name": "Product_id1", "source": "start"},
+          {"name": "Product_id2", "source": "start"},
+          {"name": "Product_id3", "source": "start"},
+          {"name": "Product_image1", "source": "start"},
+          {"name": "Product_image2", "source": "start"},
+          {"name": "Product_image3", "source": "start"},
+          {"name": "body", "source": "rules_fetch.rules_text"}
+        ]
+      },
+      "judge": {
+        "type": "llm",
+        "model": "GPT-5.1",
+        "temperature": 0,
+        "max_tokens": 3000,
+        "timeout": 120,
+        "retry": 2,
+        "system_prompt_url": "https://raw.githubusercontent.com/danielwanyan/Bob_ProductID_newissue/main/judge_system_prompt_v4.1.txt",
+        "user_prompt_url": "https://raw.githubusercontent.com/danielwanyan/Bob_ProductID_newissue/main/judge_user_prompt_v4.1.txt",
+        "voting_rule": "weighted_majority_with_type_threshold",
+        "inputs": [
+          {"name": "LLM_Juror1", "source": "juror_c"},
+          {"name": "LLM_Juror2", "source": "juror_a"},
+          {"name": "LLM_Juror3", "source": "juror_b"}
+        ],
+        "outputs": [
+          {"name": "final_verdict", "type": "string"},
+          {"name": "analysis", "type": "array"},
+          {"name": "most_anomalous_product_id", "type": "string"}
+        ]
+      },
+      "end": {
+        "type": "end",
+        "export_fields": [
+          "product_id1",
+          "product_id2",
+          "product_id3",
+          "final_verdict",
+          "analysis",
+          "most_anomalous_product_id"
+        ]
+      }
+    },
+    "connections": [
+      {"from": "start", "to": "rules_fetch"},
+      {"from": "rules_fetch", "to": ["juror_a", "juror_b", "juror_c"]},
+      {"from": "juror_a", "to": "judge"},
+      {"from": "juror_b", "to": "judge"},
+      {"from": "juror_c", "to": "judge"},
+      {"from": "judge", "to": "end"}
+    ]
+  },
+
+  "type_thresholds": {
+    "child_sexualization": 0.30,
+    "uncomfortable": 0.40,
+    "low_quality": 0.35,
+    "vulgar": 0.45,
+    "ansa": 0.45,
+    "politically_sensitive": 0.50,
+    "prohibited": 0.50,
+    "ipr": 0.50,
+    "sensitive_word": 0.50,
+    "crude": 0.50,
+    "no_package": 0.50,
+    "novelty": 0.50,
+    "black_white_edge": 0.50,
+    "video_screenshot": 0.50,
+    "watermark": 0.50,
+    "lgbt_related": 0.50,
+    "other": 0.50
+  },
+
+  "type_priority": {
+    "1": ["child_sexualization"],
+    "2": ["ansa", "politically_sensitive"],
+    "3": ["prohibited", "ipr", "vulgar"],
+    "4": ["low_quality", "uncomfortable", "novelty"],
+    "5": ["black_white_edge", "video_screenshot", "watermark"],
+    "6": ["new_issue_supplement", "other"]
+  },
+
+  "pbr_rule_mapping": {
+    "Rule 1": "身体暴露类 (Nudity & Exposure)",
+    "Rule 1.1.1": "胸部过度暴露",
+    "Rule 1.1.2": "胸部特写",
+    "Rule 1.1.3": "乳头凸起",
+    "Rule 1.1.4": "乳贴/隐形文胸",
+    "Rule 1.2.1": "全裸臀部+臀沟 (ANSA)",
+    "Rule 1.2.2": "丁字裤/极小内裤",
+    "Rule 1.2.3": "透视装露臀沟",
+    "Rule 1.2.4": "上臀沟暴露",
+    "Rule 1.3.1": "微丁字裤",
+    "Rule 1.3.2": "开裆内衣",
+    "Rule 1.4": "背部全裸",
+    "Rule 2": "性暗示行为类 (Sexual Acts & Implied Sexual Content)",
+    "Rule 2.1": "暗示性弯腰",
+    "Rule 2.2": "四肢着地",
+    "Rule 2.3": "暗示性跪姿",
+    "Rule 2.4": "分腿姿势",
+    "Rule 2.5": "暗示性躺卧",
+    "Rule 2.6": "脱衣/半脱状态",
+    "Rule 2.7": "性表情",
+    "Rule 2.8": "接吻",
+    "Rule 2.9": "抚摸",
+    "Rule 2.10": "暗示性拍摄角度",
+    "Rule 3": "低俗商品类 (Sexual Aids & Erotic Products)",
+    "Rule 3.1": "人脸/阳具图案内裤",
+    "Rule 3.2": "性角色扮演制服",
+    "Rule 3.3": "透视上衣",
+    "Rule 3.4": "生殖器造型商品",
+    "Rule 3.5": "剪影/卡通/简笔画性姿势",
+    "Rule 3.6": "Barry Wood 商品",
+    "Rule 3.7": "旗帜模特",
+    "Rule 3.8": "海报/服装/专辑少衣模特",
+    "Rule 3.9": "性感动漫贴纸",
+    "Rule 3.10": "生殖器性暗示/隐喻",
+    "Rule 3.11": "ANSA and Adult Products",
+    "Rule 4 - 情色饰品": "情色饰品类 (Erotic Accessories)",
+    "Rule 4.1 - 情色饰品": "私密部位珠宝",
+    "Rule 4.2 - 情色饰品": "情色束身带",
+    "Rule 4.3 - 情色饰品": "BDSM/恋物配饰",
+    "Rule 4 - 儿童安全": "儿童安全类 (Child Safety)",
+    "Rule 4.1.1 - 儿童安全": "性化卡通人物"
+  },
+
+  "exemption_rules": {
+    "Exemption 1": "书籍封面接吻 - 浪漫小说等书籍封面的接吻场景",
+    "Exemption 2": "非性化提衣动作 - 非实际脱衣的非性化提衣",
+    "Exemption 3": "时尚珠宝 - 作为时尚配饰营销的身体链、腰链等，模特穿着适当，无性暗示",
+    "Exemption 4": "服饰/文化/宗教饰品 - 万圣节、cosplay、戏剧、文化/宗教用途的饰品，无 BDSM 术语或恋物营销"
+  },
+
+  "evaluation_criteria": {
+    "juror_confidence_threshold": 0.55,
+    "target_precision": 0.70,
+    "target_recall": 0.60,
+    "pbr_citation_required": ["vulgar", "ansa", "child_sexualization"]
+  },
+
+  "platform_notes": {
+    "no_indentation": true,
+    "no_custom_types": true,
+    "image_json_string": true,
+    "number_types": ["confidence", "anomaly_score", "weighted_score", "threshold_used"],
+    "pbr_integration_enabled": true
+  }
+}

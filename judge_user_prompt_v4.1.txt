@@ -1,0 +1,84 @@
+请综合以下三位评审员的判断结果，做出最终裁决。
+
+## 评审员1（GPT-5.4，权重0.35）判断结果：
+{{LLM_Juror2}}
+
+## 评审员2（GPT-5.1，权重0.40）判断结果：
+{{LLM_Juror3}}
+
+## 评审员3（Gemini-2.5 Pro，权重0.25）判断结果：
+{{LLM_Juror1}}
+
+## 加权投票规则
+
+1. 计算每个商品的加权分：
+   - 如果评审员判定 has_problem=false → 贡献 = 0
+   - 如果评审员判定 has_problem=true → 贡献 = 置信度 × 权重
+   - 加权分 = GPT-5.1贡献 + GPT-5.4贡献 + Gemini-2.5贡献
+
+2. 确定问题类型（取多数评审员判定的类型）
+
+3. 根据问题类型使用对应阈值（v4.1 更新）：
+   - child_sexualization (儿童性化): 0.30（最高优先级，零容忍）
+   - uncomfortable (怪异/不适): 0.40
+   - vulgar (低俗/色情): 0.45
+   - ansa (成人内容): 0.45
+   - low_quality (图片低质): 0.35
+   - 其他类型: 0.50
+
+4. 判定：
+   - 加权分 ≥ 类型阈值 → 最终判定有问题
+   - 加权分 < 类型阈值 → 最终判定正常
+
+5. 如果三位评审员的 reason 描述的是不同问题 → 倾向于判为正常
+
+6. **v4.1 新增 PBR 规则检查**：
+   - 如果判定为 vulgar/ansa/child_sexualization，检查评审员是否引用了正确的 PBR 规则编号
+   - 规则引用格式："违反 PBR Rule X.Y.Z"
+   - 规则引用不一致 → 加权分 × 0.8
+
+## 输出要求
+
+1. 首先输出分析文本：简要说明每个商品的加权分计算和使用的阈值，以及PBR规则引用检查结果
+2. 然后输出表格（使用Markdown表格格式）
+3. 最后输出JSON（用 ```json 包裹）
+
+## 表格列
+
+| Product ID | 问题类型 | GPT-5.1 | GPT-5.1置信度 | GPT-5.4 | GPT-5.4置信度 | Gemini-2.5 | Gemini-2.5置信度 | 加权分 | 使用阈值 | 最终裁决 |
+
+## JSON格式
+
+```json
+{
+  "final_verdict": "most_anomalous_product_id 或 null",
+  "analysis": [
+    {
+      "product_id": "xxx",
+      "problem_type": "xxx",
+      "threshold_used": 0.xx,
+      "juror1_verdict": "problematic/clean",
+      "juror1_confidence": 0.xx,
+      "juror1_reason": "...",
+      "juror2_verdict": "problematic/clean",
+      "juror2_confidence": 0.xx,
+      "juror2_reason": "...",
+      "juror3_verdict": "problematic/clean",
+      "juror3_confidence": 0.xx,
+      "juror3_reason": "...",
+      "weighted_score": 0.xx,
+      "pbr_rule_check": "pass/fail",
+      "final_verdict": "problematic/clean",
+      "confidence": 0.xx,
+      "reason": "综合判断理由，包含加权分计算、使用的阈值和PBR规则检查结果"
+    }
+  ]
+}
+```
+
+注意：
+
+- final_verdict 字段：如果三个商品都没问题，输出 null
+- 如果有问题商品，输出加权分最高的那个 product_id
+- weighted_score 和 threshold_used 必须在JSON中明确给出
+- pbr_rule_check 字段：v4.1 新增，检查 vulgar/ansa/child_sexualization 的规则引用是否正确

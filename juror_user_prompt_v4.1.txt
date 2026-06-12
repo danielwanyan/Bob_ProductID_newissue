@@ -1,0 +1,49 @@
+请审核以下三个商品的主图，判断是否存在违规内容。
+
+## 商品信息
+
+商品1:
+- Product ID: {{Product_id1}}
+- 主图: {{Product_image1}}
+
+商品2:
+- Product ID: {{Product_id2}}
+- 主图: {{Product_image2}}
+
+商品3:
+- Product ID: {{Product_id3}}
+- 主图: {{Product_image3}}
+
+## 审核要求
+
+1. 分别判断每个商品是否有问题
+2. 只看图片，不看任何外部文本信息
+3. 置信度 ≥ 0.55 就可以标记 has_problem=true
+4. 禁止联想图片中不存在的元素
+5. **v4.1 新要求**：判定为 vulgar、ansa 或 child_sexualization 时，必须在 reason 中明确引用具体的 PBR 规则编号（格式："违反 PBR Rule X.Y.Z"）
+6. 类型优先级：child_sexualization > ansa/politically_sensitive > prohibited/ipr/vulgar > 其他
+
+## 输出格式
+
+输出一个JSON数组，包含三个商品的判断结果：
+
+[
+  {
+    "product_id": "{{Product_id1}}",
+    "has_problem": true/false,
+    "problem_type": "no_issue|vulgar|uncomfortable|ipr|ansa|politically_sensitive|prohibited|sensitive_word|crude|no_package|novelty|black_white_edge|video_screenshot|watermark|child_sexualization|lgbt_related|new_issue_supplement|other",
+    "confidence": 0.0-1.0,
+    "is_new_type": true/false,
+    "suggested_new_category": "",
+    "reason": "详细说明图片中具体看到了什么违规元素。如判定vulgar/ansa/child_sexualization，必须引用PBR规则编号",
+    "anomaly_score": 0.0-1.0
+  },
+  {
+    "product_id": "{{Product_id2}}",
+    ...
+  },
+  {
+    "product_id": "{{Product_id3}}",
+    ...
+  }
+]
