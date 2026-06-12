@@ -1,10 +1,10 @@
 # 商品主图问题判定规则
 
 ## 版本信息
-- 版本: v4.0
-- 更新日期: 2026-06-11
+- 版本: v4.1
+- 更新日期: 2026-06-12
 - 维护者: TikTok Shop EU 运营团队
-- 变更说明: 从 v3.1 的 8 种类型扩展到 v4.0 的 19 种类型；移除 `incorrect_category`、`simple_main_image`、`not_target_language`、`abnormal_price`；增强 `low_quality`、`vulgar`、`uncomfortable`、`sensitive_word` 判定标准；新增 `ipr`、`ansa`、`prohibited`、`crude`、`no_package`、`novelty`、`black_white_edge`、`video_screenshot`、`watermark` 类型；明确 `ANSA vs Pan Vulgar` 区分；`child_sexualization` 提升为最高优先级
+- 变更说明: v4.1 整合 PBR (Policy, Business, Rule) 官方低俗/色情判定标准；Type 3 (vulgar) 新增 33 条 PBR 子规则（Rule 1-4）及 4 条豁免条款；Type 6 (ansa) 新增 PBR Rule 1.2.1（全裸臀部+臀沟）和 Rule 3.11（ANSA 成人用品）；Type 16 (child_sexualization) 新增 PBR Rule 4（儿童安全，性化卡通人物）；常见误判案例新增 7 条 PBR 豁免案例；判定逻辑从"需同时满足"改为"满足任一即可"
 
 ---
 
@@ -447,10 +447,11 @@
 
 ---
 
-## v4.0 版本历史
+## 版本历史
 
 | 版本 | 日期 | 主要变更 |
 |------|------|---------|
+| v4.1 | 2026-06-12 | 整合 PBR 官方低俗/色情判定标准；Type 3 新增 33 条 PBR 子规则及 4 条豁免；Type 6 新增 Rule 1.2.1 和 Rule 3.11；Type 16 新增 Rule 4 儿童安全；常见误判案例新增 7 条 PBR 豁免案例 |
 | v4.0 | 2026-06-11 | 19种类型；ANSA vs Pan Vulgar 区分；child_sexualization 最高优先级；uncomfortable 增强（恐怖谷、反审美、内脏美食）；sensitive_word 增强 EU13 国语言；novelty 定义更新 |
 | v3.1 | 2026-05-27 | 分类型阈值优化：怪异0.40、低俗0.45、低质0.35 |
 | v3.0 | 2026-05-26 | 引入加权投票机制 |
