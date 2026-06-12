@@ -41,12 +41,12 @@
       "start": {
         "type": "start",
         "inputs": [
-          {"name": "product_id1", "type": "string"},
-          {"name": "product_id2", "type": "string"},
-          {"name": "product_id3", "type": "string"},
-          {"name": "product_country1", "type": "string"},
-          {"name": "product_country2", "type": "string"},
-          {"name": "product_country3", "type": "string"},
+          {"name": "product1", "type": "string"},
+          {"name": "product2", "type": "string"},
+          {"name": "product3", "type": "string"},
+          {"name": "Product_country1", "type": "string"},
+          {"name": "Product_country2", "type": "string"},
+          {"name": "Product_country3", "type": "string"},
           {"name": "product_image1", "type": "image"},
           {"name": "product_image2", "type": "image"},
           {"name": "product_image3", "type": "image"}
@@ -70,15 +70,15 @@
         "user_prompt_url": "https://raw.githubusercontent.com/danielwanyan/Bob_ProductID_newissue/main/juror_user_prompt_v4.1.txt",
         "rules_url": "https://raw.githubusercontent.com/danielwanyan/Bob_ProductID_newissue/main/judgment_criteria.md",
         "inputs": [
-          {"name": "Product_id1", "source": "start"},
-          {"name": "Product_id2", "source": "start"},
-          {"name": "Product_id3", "source": "start"},
-          {"name": "Product_country1", "source": "start"},
-          {"name": "Product_country2", "source": "start"},
-          {"name": "Product_country3", "source": "start"},
-          {"name": "Product_image1", "source": "start"},
-          {"name": "Product_image2", "source": "start"},
-          {"name": "Product_image3", "source": "start"},
+          {"name": "Product_id1", "source": "start.product1"},
+          {"name": "Product_id2", "source": "start.product2"},
+          {"name": "Product_id3", "source": "start.product3"},
+          {"name": "Product_country1", "source": "start.Product_country1"},
+          {"name": "Product_country2", "source": "start.Product_country2"},
+          {"name": "Product_country3", "source": "start.Product_country3"},
+          {"name": "Product_image1", "source": "start.product_image1"},
+          {"name": "Product_image2", "source": "start.product_image2"},
+          {"name": "Product_image3", "source": "start.product_image3"},
           {"name": "body", "source": "rules_fetch.rules_text"}
         ]
       },
@@ -95,15 +95,15 @@
         "user_prompt_url": "https://raw.githubusercontent.com/danielwanyan/Bob_ProductID_newissue/main/juror_user_prompt_v4.1.txt",
         "rules_url": "https://raw.githubusercontent.com/danielwanyan/Bob_ProductID_newissue/main/judgment_criteria.md",
         "inputs": [
-          {"name": "Product_id1", "source": "start"},
-          {"name": "Product_id2", "source": "start"},
-          {"name": "Product_id3", "source": "start"},
-          {"name": "Product_country1", "source": "start"},
-          {"name": "Product_country2", "source": "start"},
-          {"name": "Product_country3", "source": "start"},
-          {"name": "Product_image1", "source": "start"},
-          {"name": "Product_image2", "source": "start"},
-          {"name": "Product_image3", "source": "start"},
+          {"name": "Product_id1", "source": "start.product1"},
+          {"name": "Product_id2", "source": "start.product2"},
+          {"name": "Product_id3", "source": "start.product3"},
+          {"name": "Product_country1", "source": "start.Product_country1"},
+          {"name": "Product_country2", "source": "start.Product_country2"},
+          {"name": "Product_country3", "source": "start.Product_country3"},
+          {"name": "Product_image1", "source": "start.product_image1"},
+          {"name": "Product_image2", "source": "start.product_image2"},
+          {"name": "Product_image3", "source": "start.product_image3"},
           {"name": "body", "source": "rules_fetch.rules_text"}
         ]
       },
@@ -120,15 +120,15 @@
         "user_prompt_url": "https://raw.githubusercontent.com/danielwanyan/Bob_ProductID_newissue/main/juror_user_prompt_v4.1.txt",
         "rules_url": "https://raw.githubusercontent.com/danielwanyan/Bob_ProductID_newissue/main/judgment_criteria.md",
         "inputs": [
-          {"name": "Product_id1", "source": "start"},
-          {"name": "Product_id2", "source": "start"},
-          {"name": "Product_id3", "source": "start"},
-          {"name": "Product_country1", "source": "start"},
-          {"name": "Product_country2", "source": "start"},
-          {"name": "Product_country3", "source": "start"},
-          {"name": "Product_image1", "source": "start"},
-          {"name": "Product_image2", "source": "start"},
-          {"name": "Product_image3", "source": "start"},
+          {"name": "Product_id1", "source": "start.product1"},
+          {"name": "Product_id2", "source": "start.product2"},
+          {"name": "Product_id3", "source": "start.product3"},
+          {"name": "Product_country1", "source": "start.Product_country1"},
+          {"name": "Product_country2", "source": "start.Product_country2"},
+          {"name": "Product_country3", "source": "start.Product_country3"},
+          {"name": "Product_image1", "source": "start.product_image1"},
+          {"name": "Product_image2", "source": "start.product_image2"},
+          {"name": "Product_image3", "source": "start.product_image3"},
           {"name": "body", "source": "rules_fetch.rules_text"}
         ]
       },
@@ -156,12 +156,12 @@
       "end": {
         "type": "end",
         "export_fields": [
-          "product_id1",
-          "product_id2",
-          "product_id3",
-          "product_country1",
-          "product_country2",
-          "product_country3",
+          "product1",
+          "product2",
+          "product3",
+          "Product_country1",
+          "Product_country2",
+          "Product_country3",
           "final_verdict",
           "analysis",
           "most_anomalous_product_id"
@@ -264,8 +264,8 @@
     "target_recall": 0.60,
     "pbr_citation_required": ["vulgar", "ansa", "child_sexualization"],
     "empty_product_marker": "SKIP_EMPTY_PRODUCT",
-    "optional_input_fields": ["product_id2", "product_id3", "product_country2", "product_country3", "product_image2", "product_image3"],
-    "required_input_fields": ["product_id1", "product_country1", "product_image1"]
+    "optional_input_fields": ["product2", "product3", "Product_country2", "Product_country3"],
+    "required_input_fields": ["product1", "Product_country1", "product_image1", "product_image2", "product_image3"]
   },
 
   "platform_notes": {
@@ -275,6 +275,6 @@
     "number_types": ["confidence", "anomaly_score", "weighted_score", "threshold_used"],
     "pbr_integration_enabled": true,
     "country_pass_through": true,
-    "country_fields": ["product_country1", "product_country2", "product_country3"]
+    "country_fields": ["Product_country1", "Product_country2", "Product_country3"]
   }
 }
