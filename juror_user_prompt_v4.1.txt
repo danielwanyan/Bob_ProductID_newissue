@@ -22,11 +22,12 @@
 ## 审核要求
 
 1. 分别判断每个商品是否有问题
-2. 只看图片，不看任何外部文本信息
-3. 置信度 ≥ 0.55 就可以标记 has_problem=true
-4. 禁止联想图片中不存在的元素
-5. **v4.1 新要求**：判定为 vulgar、ansa 或 child_sexualization 时，必须在 reason 中明确引用具体的 PBR 规则编号（格式："违反 PBR Rule X.Y.Z"）
-6. 类型优先级：child_sexualization > ansa/politically_sensitive > prohibited/ipr/vulgar > 其他
+2. **空值处理**：如果 Product ID 为空或 "null"，直接输出 `{"product_id": "", "country": "", "has_problem": false, "problem_type": "no_issue", "confidence": 0.0, "is_new_type": false, "suggested_new_category": "", "reason": "SKIP_EMPTY_PRODUCT", "anomaly_score": 0.0}`，跳过该商品的审核
+3. 只看图片，不看任何外部文本信息
+4. 置信度 ≥ 0.55 就可以标记 has_problem=true
+5. 禁止联想图片中不存在的元素
+6. **v4.1 新要求**：判定为 vulgar、ansa 或 child_sexualization 时，必须在 reason 中明确引用具体的 PBR 规则编号（格式："违反 PBR Rule X.Y.Z"）
+7. 类型优先级：child_sexualization > ansa/politically_sensitive > prohibited/ipr/vulgar > 其他
 
 ## 输出格式
 

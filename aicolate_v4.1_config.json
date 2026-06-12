@@ -262,7 +262,10 @@
     "juror_confidence_threshold": 0.55,
     "target_precision": 0.70,
     "target_recall": 0.60,
-    "pbr_citation_required": ["vulgar", "ansa", "child_sexualization"]
+    "pbr_citation_required": ["vulgar", "ansa", "child_sexualization"],
+    "empty_product_marker": "SKIP_EMPTY_PRODUCT",
+    "optional_input_fields": ["product_id2", "product_id3", "product_country2", "product_country3", "product_image2", "product_image3"],
+    "required_input_fields": ["product_id1", "product_country1", "product_image1"]
   },
 
   "platform_notes": {

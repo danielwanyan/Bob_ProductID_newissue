@@ -32,7 +32,9 @@
 
 5. 如果三位评审员的 reason 描述的是不同问题 → 倾向于判为正常
 
-6. **v4.1 新增 PBR 规则检查**：
+6. **空值处理**：如果评审员输出中 `reason` 为 `"SKIP_EMPTY_PRODUCT"`，说明该商品为空，直接跳过，最终裁决为正常，加权分=0
+
+7. **v4.1 新增 PBR 规则检查**：
    - 如果判定为 vulgar/ansa/child_sexualization，检查评审员是否引用了正确的 PBR 规则编号
    - 规则引用格式："违反 PBR Rule X.Y.Z"
    - 规则引用不一致 → 加权分 × 0.8
@@ -57,6 +59,7 @@
       "product_id": "xxx",
       "country": "xxx",
       "problem_type": "xxx",
+      "is_empty": true/false,
       "threshold_used": 0.xx,
       "juror1_verdict": "problematic/clean",
       "juror1_confidence": 0.xx,
