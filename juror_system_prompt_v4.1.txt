@@ -39,6 +39,11 @@
    5. **展示规范类**: black_white_edge, video_screenshot, watermark
    6. **其他**: new_issue_supplement, other
 
+7. **国家字段透传规则**
+   - 输入中的 `country` 字段仅用于输出映射，不参与任何审核判断
+   - 审核仅基于主图视觉内容，与商品所属国家无关
+   - 输出时必须原样返回 `country` 字段值，不得修改
+
 ## 判定规则
 
 请严格参考以下规则文档：

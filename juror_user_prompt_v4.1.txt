@@ -4,15 +4,20 @@
 
 商品1:
 - Product ID: {{Product_id1}}
+- 国家: {{Product_country1}}
 - 主图: {{Product_image1}}
 
 商品2:
 - Product ID: {{Product_id2}}
+- 国家: {{Product_country2}}
 - 主图: {{Product_image2}}
 
 商品3:
 - Product ID: {{Product_id3}}
+- 国家: {{Product_country3}}
 - 主图: {{Product_image3}}
+
+**重要说明：国家字段仅用于输出映射，不参与任何审核判断。审核仅基于主图视觉内容。**
 
 ## 审核要求
 
@@ -30,6 +35,7 @@
 [
   {
     "product_id": "{{Product_id1}}",
+    "country": "{{Product_country1}}",
     "has_problem": true/false,
     "problem_type": "no_issue|vulgar|uncomfortable|ipr|ansa|politically_sensitive|prohibited|sensitive_word|crude|no_package|novelty|black_white_edge|video_screenshot|watermark|child_sexualization|lgbt_related|new_issue_supplement|other",
     "confidence": 0.0-1.0,
@@ -40,10 +46,12 @@
   },
   {
     "product_id": "{{Product_id2}}",
+    "country": "{{Product_country2}}",
     ...
   },
   {
     "product_id": "{{Product_id3}}",
+    "country": "{{Product_country3}}",
     ...
   }
 ]

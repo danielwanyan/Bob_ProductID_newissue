@@ -44,6 +44,9 @@
           {"name": "product_id1", "type": "string"},
           {"name": "product_id2", "type": "string"},
           {"name": "product_id3", "type": "string"},
+          {"name": "product_country1", "type": "string"},
+          {"name": "product_country2", "type": "string"},
+          {"name": "product_country3", "type": "string"},
           {"name": "product_image1", "type": "image"},
           {"name": "product_image2", "type": "image"},
           {"name": "product_image3", "type": "image"}
@@ -70,6 +73,9 @@
           {"name": "Product_id1", "source": "start"},
           {"name": "Product_id2", "source": "start"},
           {"name": "Product_id3", "source": "start"},
+          {"name": "Product_country1", "source": "start"},
+          {"name": "Product_country2", "source": "start"},
+          {"name": "Product_country3", "source": "start"},
           {"name": "Product_image1", "source": "start"},
           {"name": "Product_image2", "source": "start"},
           {"name": "Product_image3", "source": "start"},
@@ -92,6 +98,9 @@
           {"name": "Product_id1", "source": "start"},
           {"name": "Product_id2", "source": "start"},
           {"name": "Product_id3", "source": "start"},
+          {"name": "Product_country1", "source": "start"},
+          {"name": "Product_country2", "source": "start"},
+          {"name": "Product_country3", "source": "start"},
           {"name": "Product_image1", "source": "start"},
           {"name": "Product_image2", "source": "start"},
           {"name": "Product_image3", "source": "start"},
@@ -114,6 +123,9 @@
           {"name": "Product_id1", "source": "start"},
           {"name": "Product_id2", "source": "start"},
           {"name": "Product_id3", "source": "start"},
+          {"name": "Product_country1", "source": "start"},
+          {"name": "Product_country2", "source": "start"},
+          {"name": "Product_country3", "source": "start"},
           {"name": "Product_image1", "source": "start"},
           {"name": "Product_image2", "source": "start"},
           {"name": "Product_image3", "source": "start"},
@@ -147,6 +159,9 @@
           "product_id1",
           "product_id2",
           "product_id3",
+          "product_country1",
+          "product_country2",
+          "product_country3",
           "final_verdict",
           "analysis",
           "most_anomalous_product_id"
@@ -255,6 +270,8 @@
     "no_custom_types": true,
     "image_json_string": true,
     "number_types": ["confidence", "anomaly_score", "weighted_score", "threshold_used"],
-    "pbr_integration_enabled": true
+    "pbr_integration_enabled": true,
+    "country_pass_through": true,
+    "country_fields": ["product_country1", "product_country2", "product_country3"]
   }
 }
