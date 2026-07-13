@@ -1,0 +1,128 @@
+PIR v4.2 compressed rule document for Aicolate Product Image Review.
+
+Scope:
+Review TikTok Shop EU product main images for product image risk. This workflow focuses on new-customer visual risk and selected universal high-confidence issues. It does not replace GNE or policy final enforcement.
+
+Current allowed issue types:
+no_issue
+low_quality
+vulgar
+uncomfortable
+suspected_ipr
+ansa
+politically_sensitive
+prohibited
+sensitive_word
+crude
+no_package
+novelty
+child_sexualization
+lgbt_related
+new_issue_supplement
+new_guest_vulgar_visual
+strict_vulgar_or_ansa
+
+Removed issue type:
+other is removed and must not be used.
+
+Current out-of-scope standalone issues:
+black_white_edge
+video_screenshot
+watermark as standalone issue
+medicine or health supplement prohibited issue without policy support
+
+Core principles:
+Use visual evidence first.
+Use title, category, and price range only as supporting context.
+Do not invent elements that are not visible.
+If unsure whether an element exists, treat it as not visible.
+For empty product or missing image, output no_issue with reason SKIP_EMPTY_PRODUCT.
+Child sexualization must stay in scope and has highest priority.
+
+Business layers:
+new_guest_only: new_guest_vulgar_visual, lgbt_related, weapon-related prohibited, adult-oriented products that are unsuitable for new users.
+universal_high_confidence: sensitive_word, no_package, uncomfortable, politically_sensitive, crude, novelty, child_sexualization.
+standard_needs_tightening: low_quality, strict_vulgar_or_ansa.
+policy_pending: suspected_ipr.
+discovery: new_issue_supplement.
+
+suspected_ipr:
+Use suspected_ipr, not final IPR.
+Visible brand logo, brand name, famous IP character, copyrighted packaging, sports team mark, game/film/platform artwork, or event mark is only a visual IPR signal.
+Do not make final IPR conclusions from image alone.
+Current RPC provides only min_price, max_price, and currency. It does not provide official price, reference price, market price, or seller authorization status.
+Price range can be included as evidence context, but it cannot prove abnormal low price by itself.
+If visual IP signal exists and price reference or authorization is missing, route to manual or GNE confirmation.
+If authorization exists or price is reasonable against trusted external reference, downgrade suspected_ipr risk.
+
+low_quality:
+low_quality means the product subject is hard to recognize.
+Mark low_quality when users cannot clearly understand what product is being sold.
+Mark low_quality when the subject is materially blocked, cropped, blurred, too dark, too bright, too small, or overwhelmed by text or graphics.
+Promotional banners, TikTok Shop labels, seller badges, discount stickers, event frames, brand logos, and light watermarks are not low_quality by themselves.
+If the product subject remains clear and identifiable, do not mark low_quality only because the image is visually busy or promotional.
+
+vulgar, ansa, and new_guest_vulgar_visual:
+Separate new-customer visual risk from strict vulgar or ANSA.
+Normal apparel display, sexy clothing, deep-V clothing, leggings, shorts, swimwear, body-fit clothing, and normal underwear display are not strict vulgar by themselves.
+If the image mainly shows apparel/product display and there is no explicit private-part exposure or sexual act, do not mark strict vulgar.
+Borderline sexy apparel, buttock-focused fashion display, deep-V fashion display, adult-oriented product display, or platform-style concern can be new_guest_vulgar_visual when unsuitable for new-user recommendation.
+strict_vulgar_or_ansa requires explicit evidence: sexualized body-part focus, explicit private-part exposure, explicit sexual activity, adult product explicit use/display, or clear sexualized graphics/text.
+ANSA requires explicit adult nudity or sexual activities, such as nipple/genital/anus exposure, full nude buttocks with complete butt crack, explicit sexual activity, simulated intercourse, masturbation, or explicit adult product use/display.
+Weak sexual metaphor or ordinary product demonstration should not be strict vulgar unless sexual intent is explicit in composition, text, or use scenario.
+
+child_sexualization:
+Highest priority and must remain in scope.
+Any sexualized child model, child-like cartoon character in sexualized pose, child-like character with sexualized body features, or child image in adult sexual context is a hit.
+When child_sexualization is suspected, mark has_problem true and route for serious review.
+
+politically_sensitive:
+Hit when image visibly contains sensitive political symbols, flags, figures, or event-related content.
+Use visible evidence only.
+
+prohibited:
+Current batch only supports weapon-related prohibited risk for new-user strategy.
+Medicine, health supplements, and similar prohibited categories are out of current model scope unless policy is supplied.
+
+sensitive_word:
+Hit when image text visibly contains political sensitive words, profanity, insulting words, sexual slurs, or clearly prohibited sensitive text.
+Use OCR-visible text only. Do not infer text that is not visible.
+
+crude:
+Hit when visible text or graphic uses a clear vulgar metaphor, sexual pun, or double meaning.
+Do not mark crude from weak or ambiguous association.
+
+no_package:
+Hit when food is directly shown without packaging and creates hygiene or platform risk.
+
+uncomfortable:
+Hit when the product image contains uncanny body parts, visceral food/tableware, realistic organs, realistic teeth/eyes/tongue, body fluids, feces/vomit simulation, gore, or strong disgust/uncanny visual effect.
+Normal Halloween, medical/education models, normal creative design, and cute-style products are not uncomfortable unless realistic disgust or uncanny effect is clear.
+
+novelty:
+Hit for products designed mainly for shock, controversy, or platform-unfriendly novelty that may harm ordinary user experience.
+
+lgbt_related:
+For current strategy, LGBT-related visual/text elements can be new-guest-only risk depending on business policy. Do not treat as universal violation without policy.
+
+new_issue_supplement:
+Use only when there is a clear visible issue that does not fit any allowed type.
+Do not use it for uncertainty, low confidence, missing evidence, or unclear image.
+Explain the specific new issue and visible evidence.
+
+Threshold guidance:
+child_sexualization 0.30
+low_quality 0.35
+uncomfortable 0.40
+vulgar 0.45
+ansa 0.45
+strict_vulgar_or_ansa 0.45
+new_guest_vulgar_visual 0.45
+all other in-scope types 0.50
+
+Output requirements:
+Return valid JSON only.
+Do not output markdown code fences.
+Use literal null when needed, not the string "null".
+Use issue_type suspected_ipr instead of ipr.
+Do not output other, black_white_edge, video_screenshot, or standalone watermark.
