@@ -1,0 +1,195 @@
+{
+  "version": "pir-v4.2-20260713",
+  "project": "product-image-review",
+  "description": "Structured Rules Brain rules for PIR v4.2. These rules focus on suspected IPR, low quality, and vulgar/ANSA false-positive control for new-customer product image review.",
+  "source_context": {
+    "workflow": "EU_productid_Bizzard / Product Image Review",
+    "scope": "Aicolate Rules Brain dynamic rules_context",
+    "price_rpc_current_limit": "RPC currently provides only min_price, max_price, and currency. It does not provide official/reference price or authorization status."
+  },
+  "issue_types": {
+    "suspected_ipr": {
+      "display_name": "疑似IPR",
+      "old_name": "ipr",
+      "business_layer": "policy_pending",
+      "applicable_users": "new_and_existing_users_after_gne_confirmation",
+      "decision_policy": "Do not make a final IPR conclusion from image alone. Use suspected_ipr and route evidence to GNE/manual confirmation when external evidence is incomplete.",
+      "visual_signals": [
+        "visible famous brand logo",
+        "visible brand name",
+        "famous IP character or copyrighted packaging",
+        "sports team or event mark",
+        "platform, game, film, or entertainment IP artwork"
+      ],
+      "required_external_evidence": [
+        "price range from RPC",
+        "official/reference/market price if available",
+        "seller authorization status if available",
+        "sales/review/rating credibility signals if available",
+        "GNE or policy confirmation for final enforcement"
+      ],
+      "positive_rules": [
+        {
+          "id": "IPR-01",
+          "name": "Visual IP Signal",
+          "rule": "A visible brand logo, brand name, famous IP character, copyrighted packaging, or sports/team mark is only a visual IPR signal, not final proof."
+        },
+        {
+          "id": "IPR-02",
+          "name": "Abnormal Price Evidence",
+          "rule": "If visual IP signal exists and price is abnormally low against official/reference/market price, suspected_ipr risk increases."
+        },
+        {
+          "id": "IPR-03",
+          "name": "Missing Authorization Evidence",
+          "rule": "If visual IP signal exists and seller authorization is missing, unknown, or cannot be verified, route as suspected_ipr for manual/GNE confirmation."
+        }
+      ],
+      "false_positive_rules": [
+        {
+          "id": "IPR-FP-01",
+          "name": "Authorized Seller Downgrade",
+          "rule": "If seller authorization is present, downgrade suspected_ipr risk even when the image contains a brand logo."
+        },
+        {
+          "id": "IPR-FP-02",
+          "name": "Reasonable Price Downgrade",
+          "rule": "If price is reasonable for the branded product and sales/reviews look normal, downgrade to manual/GNE confirmation instead of high-risk suspected_ipr."
+        },
+        {
+          "id": "IPR-FP-03",
+          "name": "Current RPC Price Limitation",
+          "rule": "When only min_price, max_price, and currency are available, do not conclude abnormal low price from price range alone because official/reference price is missing."
+        }
+      ],
+      "output_guidance": "Use suspected_ipr instead of final IPR. Mention evidence gaps if price reference or authorization status is unavailable."
+    },
+    "low_quality": {
+      "display_name": "低质",
+      "business_layer": "standard_needs_tightening",
+      "applicable_users": "new_and_existing_users_after_standard_confirmation",
+      "decision_policy": "Only mark low_quality when the product subject is hard to recognize.",
+      "positive_rules": [
+        {
+          "id": "LQ-01",
+          "name": "Product Subject Unrecognizable",
+          "rule": "Mark low_quality when users cannot clearly recognize what product is being sold."
+        },
+        {
+          "id": "LQ-02",
+          "name": "Material Obstruction",
+          "rule": "Mark low_quality when stickers, banners, text, darkness, blur, crop, or background materially block or overwhelm the product subject."
+        },
+        {
+          "id": "LQ-03",
+          "name": "Information Overwhelming",
+          "rule": "Mark low_quality when excessive text/icons/graphics make the product subject difficult to identify quickly."
+        }
+      ],
+      "false_positive_rules": [
+        {
+          "id": "LQ-FP-01",
+          "name": "Marketing Elements Not Enough",
+          "rule": "Promotional banners, TikTok Shop labels, seller badges, discount stickers, event frames, brand logos, and light watermarks are not low_quality by themselves."
+        },
+        {
+          "id": "LQ-FP-02",
+          "name": "Subject Still Clear",
+          "rule": "If the product subject remains clear and identifiable, do not mark low_quality only because the image is visually busy or promotional."
+        },
+        {
+          "id": "LQ-FP-03",
+          "name": "Watermark Scope Exclusion",
+          "rule": "Watermark is not a standalone in-scope issue for this workflow. Only consider it under low_quality if it materially blocks product recognition."
+        }
+      ],
+      "output_guidance": "State whether the product subject is recognizable. If yes, do not mark low_quality."
+    },
+    "new_guest_vulgar_visual": {
+      "display_name": "新客低俗色情/边缘性感画风",
+      "business_layer": "new_guest_only",
+      "applicable_users": "new_users_only",
+      "decision_policy": "Use this layer for new-user visual strategy intervention when the image may affect first-time user perception but does not meet strict vulgar/ANSA criteria.",
+      "positive_rules": [
+        {
+          "id": "NGV-01",
+          "name": "New Guest Body Focus",
+          "rule": "Buttock-focused fashion display, deep-V clothing, sexy apparel, tight leggings/shorts, and adult-oriented products can be new_guest_vulgar_visual when they are unsuitable for new-user recommendation."
+        },
+        {
+          "id": "NGV-02",
+          "name": "Adult-Oriented Product",
+          "rule": "Adult-oriented products or sexual-style apparel may be routed to new_guest_vulgar_visual when not explicit enough for strict vulgar/ANSA."
+        }
+      ],
+      "false_positive_rules": [
+        {
+          "id": "NGV-FP-01",
+          "name": "Not Strict Violation",
+          "rule": "Do not label borderline sexy apparel as strict vulgar solely because it is sexy or body-fitting."
+        }
+      ],
+      "output_guidance": "Separate this from strict_vulgar_or_ansa. This is for new-user strategy intervention."
+    },
+    "strict_vulgar_or_ansa": {
+      "display_name": "严格低俗色情/成人露骨问题",
+      "business_layer": "standard_needs_tightening",
+      "applicable_users": "new_and_existing_users_after_standard_confirmation",
+      "decision_policy": "Strict vulgar/ANSA requires explicit evidence, not general sexy apparel display.",
+      "positive_rules": [
+        {
+          "id": "VG-01",
+          "name": "Sexualized Body-Part Focus",
+          "rule": "Mark strict vulgar when the image clearly focuses on sexualized body parts rather than product display."
+        },
+        {
+          "id": "VG-02",
+          "name": "Private-Part Exposure",
+          "rule": "Mark strict vulgar/ANSA for explicit private-part exposure, clear nipple/genital/anus exposure, full nude buttocks with complete butt crack, or explicit adult nudity."
+        },
+        {
+          "id": "ANSA-01",
+          "name": "Explicit Adult Activity",
+          "rule": "Mark ANSA for explicit sexual activity, masturbation, simulated intercourse, or explicit adult product use/display."
+        },
+        {
+          "id": "VG-03",
+          "name": "Clear Sexualized Graphic/Text",
+          "rule": "Mark strict vulgar when product graphics or text clearly depict sexual acts, explicit sexualized characters, or private-part imagery."
+        }
+      ],
+      "false_positive_rules": [
+        {
+          "id": "VG-FP-01",
+          "name": "Normal Apparel Display",
+          "rule": "Normal apparel display, sexy clothing, deep-V clothing, leggings, shorts, swimwear, body-fit clothing, and normal underwear display are not strict vulgar by themselves."
+        },
+        {
+          "id": "VG-FP-02",
+          "name": "Product Display Dominates",
+          "rule": "If the image subject is still clearly apparel/product display and there is no explicit private-part exposure or sexual act, downgrade from strict vulgar."
+        },
+        {
+          "id": "VG-FP-03",
+          "name": "Weak Metaphor",
+          "rule": "Weak sexual metaphor or ordinary product demonstration should not be strict vulgar unless the sexual intent is explicit in composition, text, or use scenario."
+        }
+      ],
+      "output_guidance": "If the case is borderline or only unsuitable for new users, route to new_guest_vulgar_visual instead of strict_vulgar_or_ansa."
+    }
+  },
+  "excluded_current_scope": [
+    "black_white_edge",
+    "video_screenshot",
+    "watermark_as_standalone_issue",
+    "medicine_or_health_supplement_prohibited_without_policy"
+  ],
+  "rules_brain_output_contract": {
+    "rules_context": "string",
+    "price_context": "string",
+    "matched_rules": "string",
+    "evidence_gaps": "string",
+    "rules_version": "string",
+    "product_risk_hints": "string"
+  }
+}
