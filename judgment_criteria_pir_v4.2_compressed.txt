@@ -33,7 +33,7 @@ medicine or health supplement prohibited issue without policy support
 
 Core principles:
 Use visual evidence first.
-Use title, category, and price range only as supporting context.
+Do not use product title or product category as decision evidence. Use price range only for suspected_ipr after a visible global famous brand/IP signal exists in the image.
 Do not invent elements that are not visible.
 If unsure whether an element exists, treat it as not visible.
 For empty product or missing image, output no_issue with reason SKIP_EMPTY_PRODUCT.
@@ -42,18 +42,18 @@ Child sexualization must stay in scope and has highest priority.
 Business layers:
 new_guest_only: new_guest_vulgar_visual, lgbt_related, weapon-related prohibited, adult-oriented products that are unsuitable for new users.
 universal_high_confidence: sensitive_word, no_package, uncomfortable, politically_sensitive, crude, novelty, child_sexualization.
-standard_needs_tightening: low_quality, strict_vulgar_or_ansa.
-policy_pending: suspected_ipr.
+standard_needs_tightening: low_quality, strict_vulgar_or_ansa, suspected_ipr.
 discovery: new_issue_supplement.
 
 suspected_ipr:
 Use suspected_ipr, not final IPR.
-Visible brand logo, brand name, famous IP character, copyrighted packaging, sports team mark, game/film/platform artwork, or event mark is only a visual IPR signal.
-Do not make final IPR conclusions from image alone.
-Current RPC provides only min_price, max_price, and currency. It does not provide official price, reference price, market price, or seller authorization status.
-Price range can be included as evidence context, but it cannot prove abnormal low price by itself.
-If visual IP signal exists and price reference or authorization is missing, route to manual or GNE confirmation.
-If authorization exists or price is reasonable against trusted external reference, downgrade suspected_ipr risk.
+Only globally famous brands or globally famous IPs are in suspected_ipr scope.
+Skip white-label brands, small brands, unknown brands, ordinary store brands, and generic design similarities.
+The global famous brand/IP signal must be visible in the product image itself. Do not create suspected_ipr from title or category alone.
+After a visible global famous brand/IP signal exists, use price range as auxiliary evidence.
+Use broad model world knowledge to judge whether the price range is clearly below 70 percent of the normal official or market price level for that brand/product family.
+If the normal price level, product variant, SKU, or match confidence is uncertain, do not apply the 70 percent rule. Route to manual review.
+If price range is plausibly reasonable for the visible global famous brand/product family, downgrade suspected_ipr risk.
 
 low_quality:
 low_quality means the product subject is hard to recognize.

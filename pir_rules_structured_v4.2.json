@@ -5,64 +5,74 @@
   "source_context": {
     "workflow": "EU_productid_Bizzard / Product Image Review",
     "scope": "Aicolate Rules Brain dynamic rules_context",
-    "price_rpc_current_limit": "RPC currently provides only min_price, max_price, and currency. It does not provide official/reference price or authorization status."
+    "price_rpc_current_limit": "RPC currently provides min_price, max_price, and currency. For suspected_ipr v4.2, LLM may use broad world knowledge only for rough price reasonableness after a visible global famous brand/IP signal exists."
   },
   "issue_types": {
     "suspected_ipr": {
       "display_name": "疑似IPR",
       "old_name": "ipr",
-      "business_layer": "policy_pending",
-      "applicable_users": "new_and_existing_users_after_gne_confirmation",
-      "decision_policy": "Do not make a final IPR conclusion from image alone. Use suspected_ipr and route evidence to GNE/manual confirmation when external evidence is incomplete.",
+      "business_layer": "standard_needs_tightening",
+      "applicable_users": "new_and_existing_users_after_manual_review",
+      "decision_policy": "Only evaluate suspected_ipr for globally famous brands or globally famous IPs visible in the product image. Skip white-label, small, unknown, or ordinary store brands. After a visible famous brand/IP signal exists, use price range and broad model world knowledge to judge whether the price is clearly far below the normal official/market price level. Do not require exact official price.",
       "visual_signals": [
-        "visible famous brand logo",
-        "visible brand name",
-        "famous IP character or copyrighted packaging",
-        "sports team or event mark",
-        "platform, game, film, or entertainment IP artwork"
+        "visible globally famous brand logo or brand name",
+        "visible globally famous IP character, game, film, sports team, event, or copyrighted packaging",
+        "visible globally famous luxury, sportswear, electronics, toy/game, entertainment, or collectible IP mark"
       ],
       "required_external_evidence": [
+        "visible globally famous brand/IP signal in product image",
         "price range from RPC",
-        "official/reference/market price if available",
-        "seller authorization status if available",
-        "sales/review/rating credibility signals if available",
-        "GNE or policy confirmation for final enforcement"
+        "LLM broad world-knowledge assessment of whether price is clearly below 70 percent of normal official/market price level",
+        "manual/GNE confirmation for final enforcement"
       ],
       "positive_rules": [
         {
           "id": "IPR-01",
-          "name": "Visual IP Signal",
-          "rule": "A visible brand logo, brand name, famous IP character, copyrighted packaging, or sports/team mark is only a visual IPR signal, not final proof."
+          "name": "Global Famous Brand/IP Scope",
+          "rule": "Only globally famous brands or globally famous IPs visible in the product image are in suspected_ipr scope. White-label, small, unknown, or ordinary store brands should be skipped."
         },
         {
           "id": "IPR-02",
-          "name": "Abnormal Price Evidence",
-          "rule": "If visual IP signal exists and price is abnormally low against official/reference/market price, suspected_ipr risk increases."
+          "name": "Image-Visible Signal Required",
+          "rule": "The brand/IP signal must be visible in the product image. Do not create suspected_ipr from product title or category alone."
         },
         {
           "id": "IPR-03",
-          "name": "Missing Authorization Evidence",
-          "rule": "If visual IP signal exists and seller authorization is missing, unknown, or cannot be verified, route as suspected_ipr for manual/GNE confirmation."
+          "name": "70 Percent Price Rule With World Knowledge",
+          "rule": "If a visible global famous brand/IP signal exists and the current price range is clearly below 70 percent of the normal official/market price level based on broad model world knowledge, suspected_ipr risk increases."
         }
       ],
       "false_positive_rules": [
         {
           "id": "IPR-FP-01",
-          "name": "Authorized Seller Downgrade",
-          "rule": "If seller authorization is present, downgrade suspected_ipr risk even when the image contains a brand logo."
+          "name": "White Label And Small Brand Exclusion",
+          "rule": "Do not mark suspected_ipr for white-label, small, unknown, or ordinary store brands even if the image contains a logo or brand-like mark."
         },
         {
           "id": "IPR-FP-02",
-          "name": "Reasonable Price Downgrade",
-          "rule": "If price is reasonable for the branded product and sales/reviews look normal, downgrade to manual/GNE confirmation instead of high-risk suspected_ipr."
+          "name": "No Image Signal No IPR",
+          "rule": "Do not mark suspected_ipr when the global famous brand/IP appears only in title, category, or model guess, but not visibly in the image."
         },
         {
           "id": "IPR-FP-03",
-          "name": "Current RPC Price Limitation",
-          "rule": "When only min_price, max_price, and currency are available, do not conclude abnormal low price from price range alone because official/reference price is missing."
+          "name": "Uncertain Price Knowledge",
+          "rule": "If the normal official/market price level is uncertain, or if the product variant/SKU is unclear, do not apply the 70 percent rule. Route to manual_review instead."
+        },
+        {
+          "id": "IPR-FP-04",
+          "name": "Reasonable Price Range Downgrade",
+          "rule": "If the price range is plausibly reasonable for the visible brand/product family, downgrade suspected_ipr risk even when a famous brand/IP signal is visible."
         }
       ],
-      "output_guidance": "Use suspected_ipr instead of final IPR. Mention evidence gaps if price reference or authorization status is unavailable."
+      "output_guidance": "Use suspected_ipr only for globally famous brand/IP image signals. If price appears clearly below 70 percent of normal official/market price level, explain the rough price comparison. If price knowledge is uncertain, output manual_review with evidence gap instead of high-risk suspected_ipr.",
+      "not_in_scope": [
+        "white-label brands",
+        "small or unknown brands",
+        "ordinary store brands",
+        "generic design similarities without a globally famous brand/IP signal",
+        "brand mentioned only in product title or category but not visible in image"
+      ],
+      "price_assessment_policy": "Use the current price range only after a visible global famous brand/IP signal exists in the image. The LLM may use broad world knowledge to estimate whether the product price is clearly below 70 percent of the normal official/market price level for that brand/product family. If the model is not confident about the normal price level, do not mark high-risk suspected_ipr; use manual_review."
     },
     "low_quality": {
       "display_name": "低质",
