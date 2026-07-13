@@ -52,8 +52,9 @@ Skip white-label brands, small brands, unknown brands, ordinary store brands, an
 The global famous brand/IP signal must be visible in the product image itself. Do not create suspected_ipr from title or category alone.
 After a visible global famous brand/IP signal exists, use price range as auxiliary evidence.
 Use broad model world knowledge to judge whether the price range is clearly below 70 percent of the normal official or market price level for that brand/product family.
-If the normal price level, product variant, SKU, or match confidence is uncertain, do not apply the 70 percent rule. Route to manual review.
-If price range is plausibly reasonable for the visible global famous brand/product family, downgrade suspected_ipr risk.
+If the normal price level, product variant, SKU, or match confidence is uncertain, do not route to manual review unless there is another strong visual counterfeit or piracy signal. Downgrade to no_issue or clean.
+If price range is plausibly reasonable for the visible global famous brand/product family, downgrade to no_issue or clean.
+manual_review is only for high-risk suspected IPR: visible global famous brand/IP plus clearly abnormal low price below 70 percent, or another strong visual counterfeit or piracy signal.
 
 low_quality:
 low_quality means the product subject is hard to recognize.
