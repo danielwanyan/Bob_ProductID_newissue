@@ -13,7 +13,7 @@
       "old_name": "ipr",
       "business_layer": "standard_needs_tightening",
       "applicable_users": "new_and_existing_users_after_manual_review",
-      "decision_policy": "Only route to manual_review when there is clear suspected IPR: a globally famous brand/IP is visibly present in the product image and the price range appears clearly below 70 percent of the normal official/market price level, or the visual product itself strongly suggests counterfeit/pirated branded goods. If price is plausibly reasonable or price knowledge is uncertain without other strong risk, downgrade to no_issue/clean to reduce manual review workload.",
+      "decision_policy": "Only route to manual_review when there is clear suspected IPR: a globally famous brand/IP is visibly present in the product image and the price range appears clearly below 30 percent of the normal official/market price level, or the visual product itself strongly suggests counterfeit/pirated branded goods. If price is plausibly reasonable or price knowledge is uncertain without other strong risk, downgrade to no_issue/clean to reduce manual review workload.",
       "visual_signals": [
         "visible globally famous brand logo or brand name",
         "visible globally famous IP character, game, film, sports team, event, or copyrighted packaging",
@@ -22,7 +22,7 @@
       "required_external_evidence": [
         "visible globally famous brand/IP signal in product image",
         "price range from RPC",
-        "LLM broad world-knowledge assessment that price is clearly below 70 percent of normal official/market price level OR strong visual counterfeit/piracy signal",
+        "LLM broad world-knowledge assessment that price is clearly below 30 percent of normal official/market price level OR strong visual counterfeit/piracy signal",
         "manual/GNE confirmation only for high-risk suspected IPR cases"
       ],
       "positive_rules": [
@@ -39,7 +39,7 @@
         {
           "id": "IPR-03",
           "name": "70 Percent Price Rule With World Knowledge",
-          "rule": "If a visible global famous brand/IP signal exists and the current price range is clearly below 70 percent of the normal official/market price level based on broad model world knowledge, route to manual_review as suspected_ipr high risk."
+          "rule": "If a visible global famous brand/IP signal exists and the current price range is clearly below 30 percent of the normal official/market price level based on broad model world knowledge, route to manual_review as suspected_ipr high risk."
         }
       ],
       "false_positive_rules": [
@@ -64,7 +64,7 @@
           "rule": "If the price range is plausibly reasonable for the visible brand/product family, downgrade to no_issue/clean even when a famous brand/IP signal is visible."
         }
       ],
-      "output_guidance": "Use suspected_ipr manual_review only for high-risk globally famous brand/IP cases. High risk means visible global famous brand/IP plus clearly abnormal low price below 70 percent of normal official/market price level, or strong visual counterfeit/piracy signal. If price is plausibly reasonable or price knowledge is uncertain, downgrade to no_issue/clean to avoid wasting manual review.",
+      "output_guidance": "Use suspected_ipr manual_review only for high-risk globally famous brand/IP cases. High risk means visible global famous brand/IP plus clearly abnormal low price below 30 percent of normal official/market price level, or strong visual counterfeit/piracy signal. If price is plausibly reasonable or price knowledge is uncertain, downgrade to no_issue/clean to avoid wasting manual review.",
       "not_in_scope": [
         "white-label brands",
         "small or unknown brands",
@@ -72,7 +72,7 @@
         "generic design similarities without a globally famous brand/IP signal",
         "brand mentioned only in product title or category but not visible in image"
       ],
-      "price_assessment_policy": "Use the current price range only after a visible global famous brand/IP signal exists in the image. The LLM may use broad world knowledge to estimate whether the price is clearly below 70 percent of the normal official/market price level. If the model is not confident, do not route to manual_review unless there is another strong visual counterfeit/piracy signal."
+      "price_assessment_policy": "Use the current price range only after a visible global famous brand/IP signal exists in the image. The LLM may use broad world knowledge to estimate whether the price is clearly below 30 percent of the normal official/market price level. If the model is not confident, do not route to manual_review unless there is another strong visual counterfeit/piracy signal."
     },
     "low_quality": {
       "display_name": "低质",
