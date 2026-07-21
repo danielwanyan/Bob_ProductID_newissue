@@ -30,6 +30,7 @@ black_white_edge
 video_screenshot
 watermark as standalone issue
 medicine or health supplement prohibited issue without policy support
+medicine, nutrition supplement, vitamin, protein, or ordinary health supplement packaging as new_issue_supplement by category alone
 
 Core principles:
 Use visual evidence first.
@@ -57,6 +58,8 @@ Luxury brand special rule: if ordinary users would recognize the visible brand a
 Do not use a moderation list. Use broad user-facing world knowledge to decide whether the brand is luxury.
 If the normal price level, product variant, SKU, or luxury status is uncertain, do not route to manual review unless there is another strong visual counterfeit or piracy signal. Downgrade to no_issue or clean.
 If price range is plausibly reasonable for the visible global famous brand/product family, downgrade to no_issue or clean.
+Ordinary related-IP derivative merchandise, fan merchandise, celebrity/character-inspired dolls, plush, cards, stickers, toys, or collectibles are not suspected_ipr by default. If the image shows derivative merchandise sales but no clear counterfeit/piracy signal and no clearly abnormal price risk, downgrade to no_issue or clean.
+If the visible character/IP identity is uncertain, resembles a known IP only weakly, or the price is reasonable for derivative merchandise, downgrade to no_issue or clean.
 
 low_quality:
 low_quality means the product subject is hard to recognize.
@@ -73,6 +76,7 @@ Borderline sexy apparel, buttock-focused fashion display, deep-V fashion display
 strict_vulgar_or_ansa requires explicit evidence: sexualized body-part focus, explicit private-part exposure, explicit sexual activity, adult product explicit use/display, or clear sexualized graphics/text.
 ANSA requires explicit adult nudity or sexual activities, such as nipple/genital/anus exposure, full nude buttocks with complete butt crack, explicit sexual activity, simulated intercourse, masturbation, or explicit adult product use/display.
 Weak sexual metaphor or ordinary product demonstration should not be strict vulgar unless sexual intent is explicit in composition, text, or use scenario.
+If the visible image is clearly adult-product-oriented, nude-like, or unsuitable for both new and existing users, use strict_vulgar_or_ansa instead of new_guest_vulgar_visual.
 
 child_sexualization:
 Highest priority and must remain in scope.
@@ -97,10 +101,12 @@ Do not mark crude from weak or ambiguous association.
 
 no_package:
 Hit when food is directly shown without packaging and creates hygiene or platform risk.
+If edible food is clearly exposed without protective packaging, wrapping, sealed container, or hygienic presentation, mark no_package rather than no_issue.
 
 uncomfortable:
 Hit when the product image contains uncanny body parts, visceral food/tableware, realistic organs, realistic teeth/eyes/tongue, body fluids, feces/vomit simulation, gore, or strong disgust/uncanny visual effect.
 Normal Halloween, medical/education models, normal creative design, and cute-style products are not uncomfortable unless realistic disgust or uncanny effect is clear.
+Hit when the product image uses disgusting, nauseating, grotesque, or physically uncomfortable visual effect as a main selling point.
 
 novelty:
 Hit for products designed mainly for shock, controversy, or platform-unfriendly novelty that may harm ordinary user experience.
@@ -112,6 +118,7 @@ new_issue_supplement:
 Use only when there is a clear visible issue that does not fit any allowed type.
 Do not use it for uncertainty, low confidence, missing evidence, or unclear image.
 Explain the specific new issue and visible evidence.
+Do not use new_issue_supplement for health supplements, nutrition supplements, vitamins, protein products, pills, or ordinary supplement packaging by category alone. If no other visible in-scope issue exists, output no_issue or clean.
 
 Threshold guidance:
 child_sexualization 0.30

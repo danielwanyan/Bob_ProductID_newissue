@@ -1,5 +1,5 @@
 {
-  "version": "pir-v4.2-20260713",
+  "version": "pir-v4.2-20260721-ground-truth",
   "project": "product-image-review",
   "description": "Structured Rules Brain rules for PIR v4.2. These rules focus on suspected IPR, low quality, and vulgar/ANSA false-positive control for new-customer product image review.",
   "source_context": {
@@ -13,7 +13,7 @@
       "old_name": "ipr",
       "business_layer": "standard_needs_tightening",
       "applicable_users": "new_and_existing_users_after_manual_review",
-      "decision_policy": "Only route to manual_review for clear high-risk suspected IPR. General globally famous brands/IPs are high risk when price is clearly below 30 percent of normal official/market price level. Luxury brands are also high risk when price is between 30 and 45 percent of normal official/market price level, judged by broad user-facing world knowledge rather than a moderation list. If price is plausibly reasonable or price knowledge is uncertain without another strong risk, downgrade to no_issue/clean to reduce manual review workload.",
+      "decision_policy": "Only route to manual_review for clear high-risk suspected IPR. General globally famous brands/IPs are high risk when price is clearly below 30 percent of normal official/market price level. Luxury brands are also high risk when price is between 30 and 45 percent of normal official/market price level, judged by broad user-facing world knowledge rather than a moderation list. If price is plausibly reasonable or price knowledge is uncertain without another strong risk, downgrade to no_issue/clean to reduce manual review workload. Ordinary related-IP derivative merchandise or fan/collectible-style merchandise sales should not be suspected_ipr by themselves when counterfeit/piracy evidence is not visually clear.",
       "visual_signals": [
         "visible globally famous brand logo or brand name",
         "visible globally famous IP character, game, film, sports team, event, or copyrighted packaging",
@@ -68,15 +68,27 @@
           "id": "IPR-FP-04",
           "name": "Reasonable Price Range Downgrade",
           "rule": "If the price range is plausibly reasonable for the visible brand/product family, downgrade to no_issue/clean even when a famous brand/IP signal is visible."
+        },
+        {
+          "id": "IPR-FP-05",
+          "name": "Related IP Derivative Merchandise Exclusion",
+          "rule": "Do not route ordinary related-IP derivative merchandise, fan merchandise, celebrity/character-inspired dolls, plush, cards, stickers, toys, or collectibles to suspected_ipr/manual_review by default. If the image shows derivative merchandise sales but no clear counterfeit/piracy signal and no clearly abnormal price risk, downgrade to no_issue/clean."
+        },
+        {
+          "id": "IPR-FP-06",
+          "name": "Uncertain Character Identity Or Reasonable Price",
+          "rule": "If the visible character/IP identity is uncertain, resembles a known IP only weakly, or the price range is reasonable for derivative merchandise, do not keep suspected_ipr. Downgrade to no_issue/clean unless another strong visual counterfeit/piracy signal exists."
         }
       ],
-      "output_guidance": "Use suspected_ipr manual_review only for high-risk globally famous brand/IP cases. High risk means visible global famous brand/IP plus price clearly below 30 percent of normal official/market price level; for luxury brands, 30-45 percent also qualifies. Luxury brand recognition is based on broad user-facing world knowledge, not a moderation list. If price is plausibly reasonable or price/luxury/SKU knowledge is uncertain, downgrade to no_issue/clean unless another strong counterfeit/piracy signal exists.",
+      "output_guidance": "Use suspected_ipr manual_review only for high-risk globally famous brand/IP cases. High risk means visible global famous brand/IP plus price clearly below 30 percent of normal official/market price level; for luxury brands, 30-45 percent also qualifies. Luxury brand recognition is based on broad user-facing world knowledge, not a moderation list. If price is plausibly reasonable or price/luxury/SKU knowledge is uncertain, downgrade to no_issue/clean unless another strong counterfeit/piracy signal exists. Related-IP derivative merchandise sales should be clean/no_issue unless clear counterfeit/piracy evidence is visible.",
       "not_in_scope": [
         "white-label brands",
         "small or unknown brands",
         "ordinary store brands",
         "generic design similarities without a globally famous brand/IP signal",
-        "brand mentioned only in product title or category but not visible in image"
+        "brand mentioned only in product title or category but not visible in image",
+        "ordinary related-IP derivative merchandise without clear counterfeit/piracy evidence",
+        "fan merchandise or collectible-style products when price is reasonable or IP identity is uncertain"
       ],
       "price_assessment_policy": "Use current price range only after a visible global famous brand/IP signal exists in the image. Use broad model world knowledge to estimate normal official/market price level and whether the brand is luxury from a user perspective. General threshold: below 30 percent. Luxury threshold: 30-45 percent also high risk. If not confident, do not route to manual_review unless there is another strong visual counterfeit/piracy signal."
     },
@@ -121,11 +133,84 @@
       ],
       "output_guidance": "State whether the product subject is recognizable. If yes, do not mark low_quality."
     },
+    "new_issue_supplement": {
+      "display_name": "新增问题补充",
+      "business_layer": "discovery",
+      "applicable_users": "new_and_existing_users_only_after_clear_visible_issue",
+      "decision_policy": "Use new_issue_supplement only when there is a clear visible image issue that is not covered by any allowed issue type. It is not a bucket for uncertainty, weak policy concern, category-only concern, or health supplement category concern.",
+      "positive_rules": [
+        {
+          "id": "NIS-01",
+          "name": "Clear Uncovered Visible Issue",
+          "rule": "Mark new_issue_supplement only when the product image has a concrete visible risk that cannot be categorized as low_quality, vulgar/ANSA, uncomfortable, no_package, prohibited, suspected_ipr, or another allowed issue type."
+        }
+      ],
+      "false_positive_rules": [
+        {
+          "id": "NIS-FP-01",
+          "name": "Health Supplement Is Not New Issue",
+          "rule": "Do not mark health supplements, nutrition supplements, pills, vitamins, protein products, or ordinary supplement packaging as new_issue_supplement by category alone. If no other visible in-scope issue exists, output no_issue/clean."
+        },
+        {
+          "id": "NIS-FP-02",
+          "name": "Uncertainty Is Not New Issue",
+          "rule": "Do not use new_issue_supplement for uncertain policy scope, missing evidence, unclear image, or weak suspicion. Downgrade to no_issue/clean unless a specific visible issue is stated."
+        }
+      ],
+      "output_guidance": "If choosing new_issue_supplement, name the exact visible issue and explain why no existing allowed issue type fits. Health or supplement category alone should be no_issue/clean."
+    },
+    "no_package": {
+      "display_name": "无包装食品",
+      "business_layer": "universal_high_confidence",
+      "applicable_users": "new_and_existing_users_after_standard_confirmation",
+      "decision_policy": "Mark no_package when edible food is visibly sold or presented without packaging in a way that creates hygiene or platform trust risk.",
+      "positive_rules": [
+        {
+          "id": "NP-01",
+          "name": "Unpackaged Food",
+          "rule": "Mark no_package when the product image clearly shows food directly exposed without protective packaging, wrapping, sealed container, or hygienic presentation."
+        }
+      ],
+      "false_positive_rules": [
+        {
+          "id": "NP-FP-01",
+          "name": "Packaged Or Serving Context",
+          "rule": "Do not mark no_package when food is visibly packaged, sealed, displayed in normal serving/tableware context, or the lack of packaging is not clear from the image."
+        }
+      ],
+      "output_guidance": "Use no_package for clearly unpackaged food rather than no_issue. Describe the visible lack of packaging."
+    },
+    "uncomfortable": {
+      "display_name": "怪异/不适",
+      "business_layer": "universal_high_confidence",
+      "applicable_users": "new_and_existing_users_after_standard_confirmation",
+      "decision_policy": "Mark uncomfortable when the image intentionally uses strong disgust, grotesque, uncanny, or physically uncomfortable visuals as the selling point.",
+      "positive_rules": [
+        {
+          "id": "UF-01",
+          "name": "Disgust As Selling Point",
+          "rule": "Mark uncomfortable when the product image uses disgusting, nauseating, grotesque, or body-horror-like visual effect as a main selling point, even if the product category itself is otherwise allowed."
+        },
+        {
+          "id": "UF-02",
+          "name": "Uncanny Body Or Fluid Visual",
+          "rule": "Mark uncomfortable for uncanny body parts, realistic organs, realistic teeth/eyes/tongue, body fluids, feces/vomit simulation, gore, or similar strong discomfort cues."
+        }
+      ],
+      "false_positive_rules": [
+        {
+          "id": "UF-FP-01",
+          "name": "Cute Or Normal Creative Design",
+          "rule": "Do not mark uncomfortable for normal cute-style, ordinary Halloween, medical/education models, or harmless creative design unless realistic disgust or strong uncanny effect is clear."
+        }
+      ],
+      "output_guidance": "If the visible product appeal is to make users feel grossed out or uncomfortable, keep uncomfortable instead of no_issue."
+    },
     "new_guest_vulgar_visual": {
       "display_name": "新客低俗色情/边缘性感画风",
       "business_layer": "new_guest_only",
       "applicable_users": "new_users_only",
-      "decision_policy": "Use this layer for new-user visual strategy intervention when the image may affect first-time user perception but does not meet strict vulgar/ANSA criteria.",
+      "decision_policy": "Use this layer for new-user visual strategy intervention when the image may affect first-time user perception but does not meet strict vulgar/ANSA criteria. Do not use this layer for adult products or nude-like sexualized imagery that is unsuitable for both new and existing users.",
       "positive_rules": [
         {
           "id": "NGV-01",
@@ -143,6 +228,11 @@
           "id": "NGV-FP-01",
           "name": "Not Strict Violation",
           "rule": "Do not label borderline sexy apparel as strict vulgar solely because it is sexy or body-fitting."
+        },
+        {
+          "id": "NGV-FP-02",
+          "name": "Adult Or Existing-User Unsuitable Content",
+          "rule": "Do not keep new_guest_vulgar_visual when the visible image is clearly adult-product-oriented, nude-like, or unsuitable for both new and existing users. Upgrade to strict_vulgar_or_ansa when explicit adult product, private-part, nude-like, or clearly sexualized evidence is visible."
         }
       ],
       "output_guidance": "Separate this from strict_vulgar_or_ansa. This is for new-user strategy intervention."
@@ -172,6 +262,11 @@
           "id": "VG-03",
           "name": "Clear Sexualized Graphic/Text",
           "rule": "Mark strict vulgar when product graphics or text clearly depict sexual acts, explicit sexualized characters, or private-part imagery."
+        },
+        {
+          "id": "VG-04",
+          "name": "Adult Product Or Nude-Like Existing-User Risk",
+          "rule": "Mark strict_vulgar_or_ansa when the product image clearly shows an adult-oriented product, nude-like display, or sexualized imagery that is unsuitable for both new and existing users, even if the previous borderline layer would have been new_guest_vulgar_visual."
         }
       ],
       "false_positive_rules": [
