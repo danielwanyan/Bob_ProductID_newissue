@@ -91,7 +91,9 @@ Use visible evidence only.
 
 prohibited:
 Current batch supports weapon-related prohibited risk and realistic replica-currency risk.
-Mark prohibited when the image visibly shows weapons, realistic weapon replicas, firearm-like products, or weapon-related items that create platform risk.
+Mark prohibited when the image visibly shows functional weapons, realistic usable weapon replicas, firearm-like products, or weapon-related items that create platform risk and are not clearly toy, water-play, decorative, miniature, jewelry, charm, or ornament products.
+Do not mark prohibited for water gun, high pressure water gun, toy blaster, toy foam dart gun, or clearly labeled toy/water-play products when the visual design is clearly non-real firearm and the product context is toy or water play.
+Do not mark prohibited for clearly decorative weapon-shaped products, miniature weapon charms, jewelry, ornaments, copper/brass decorative gun items, dollhouse accessories, collectibles, or toys when they are visibly non-functional and not realistic usable weapons.
 Mark prohibited when the image shows realistic-looking banknotes, replica currency, prop money, copy money, motion-picture banknotes, or similar money-like items that may create counterfeit-currency or misuse risk.
 This applies even when the item is labeled COPY, prop, movie, novelty, educational, or play money if it visually resembles real currency.
 Do not mark prohibited for clearly non-realistic toy money, cartoon money, game tokens, or decorative money patterns that ordinary users would not confuse with real currency.

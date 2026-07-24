@@ -28,7 +28,7 @@ REQUIRED_ISSUE_TYPES = [
 REQUIRED_RULE_SNIPPETS = {
     "lgbt_related": ["GAY", "six-color Pride", "novelty"],
     "uncomfortable": ["severe hair loss", "skeleton", "body-condition"],
-    "prohibited": ["replica currency", "prop money", "COPY"],
+    "prohibited": ["replica currency", "prop money", "COPY", "water gun", "decorative", "miniature"],
     "crude": ["bitch", "PLOUISE", "brand whitelist"],
     "new_guest_vulgar_visual": ["shapewear", "mannequin lower-body", "new_guest_vulgar_visual"],
     "strict_vulgar_or_ansa": ["Do not upgrade", "body-focused", "explicit private-part exposure"],
@@ -38,6 +38,8 @@ REQUIRED_RULE_SNIPPETS = {
 
 COMPRESSED_SNIPPETS = [
     "replica currency",
+    "water gun",
+    "decorative weapon-shaped",
     "severe hair loss",
     "six-color Pride",
     "PLOUISE",

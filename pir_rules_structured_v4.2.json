@@ -322,12 +322,12 @@
       "display_name": "禁限售",
       "business_layer": "new_guest_only",
       "applicable_users": "new_and_existing_users_after_policy_confirmation",
-      "decision_policy": "Current PIR strategy includes weapon-related risk and realistic replica currency risk. Mark prohibited when the product image visibly shows realistic banknotes, replica currency, prop money, copy money, motion-picture banknotes, or similar money-like items that may create counterfeit-currency or misuse risk.",
+      "decision_policy": "Current PIR strategy includes weapon-related risk and realistic replica currency risk. For weapon-related risk, mark prohibited only when the image shows a functional weapon, a realistic usable weapon replica, or firearm-like product without clear toy, water-play, decorative, miniature, jewelry, charm, or ornament context. Mark prohibited when the product image visibly shows realistic banknotes, replica currency, prop money, copy money, motion-picture banknotes, or similar money-like items that may create counterfeit-currency or misuse risk.",
       "positive_rules": [
         {
           "id": "PB-01",
           "name": "Weapon-Related Prohibited Risk",
-          "rule": "Mark prohibited when the image visibly shows weapons, realistic weapon replicas, firearm-like products, or weapon-related items that create platform risk."
+          "rule": "Mark prohibited when the image visibly shows functional weapons, realistic usable weapon replicas, firearm-like products, or weapon-related items that create platform risk and are not clearly toy, water-play, decorative, miniature, jewelry, charm, or ornament products."
         },
         {
           "id": "PB-02",
@@ -340,9 +340,19 @@
           "id": "PB-FP-01",
           "name": "Non-Realistic Toy Boundary",
           "rule": "Do not mark prohibited for clearly non-realistic toy money, cartoon money, game tokens, or decorative money patterns that ordinary users would not confuse with real currency."
+        },
+        {
+          "id": "PB-FP-02",
+          "name": "Water Gun And Toy Blaster Boundary",
+          "rule": "Do not mark prohibited for water gun, high pressure water gun, toy blaster, toy foam dart gun, or clearly labeled toy/water-play products when the visual design is clearly non-real firearm and the product context is toy or water play."
+        },
+        {
+          "id": "PB-FP-03",
+          "name": "Decorative Miniature Weapon-Shaped Boundary",
+          "rule": "Do not mark prohibited for clearly decorative weapon-shaped products, miniature weapon charms, jewelry, ornaments, copper/brass decorative gun items, dollhouse accessories, collectibles, or toys when they are visibly non-functional and not realistic usable weapons."
         }
       ],
-      "output_guidance": "Use prohibited for visible replica currency or realistic prop money rather than suspected_ipr or no_issue. Explain the visible currency-like evidence, including COPY or motion-picture markings when present."
+      "output_guidance": "Use prohibited for visible replica currency or realistic prop money rather than suspected_ipr or no_issue. For weapon-shaped products, first check whether the image clearly indicates water gun, toy, decorative, miniature, jewelry, charm, ornament, or non-functional accessory context; if so, downgrade to no_issue/clean. Explain the visible currency-like or weapon-like evidence, including COPY or motion-picture markings when present."
     },
     "sensitive_word": {
       "display_name": "敏感词",
