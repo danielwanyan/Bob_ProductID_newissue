@@ -73,10 +73,12 @@ Separate new-customer visual risk from strict vulgar or ANSA.
 Normal apparel display, sexy clothing, deep-V clothing, leggings, shorts, swimwear, body-fit clothing, and normal underwear display are not strict vulgar by themselves.
 If the image mainly shows apparel/product display and there is no explicit private-part exposure or sexual act, do not mark strict vulgar.
 Borderline sexy apparel, buttock-focused fashion display, deep-V fashion display, adult-oriented product display, or platform-style concern can be new_guest_vulgar_visual when unsuitable for new-user recommendation.
+Buttock-focused shapewear, leggings, underwear-like display, mannequin lower-body display, silicone shaping garment, or body-enhancing product display should usually stay in new_guest_vulgar_visual when there is no explicit private-part exposure, sexual act, adult product use scenario, or explicit nudity.
 strict_vulgar_or_ansa requires explicit evidence: sexualized body-part focus, explicit private-part exposure, explicit sexual activity, adult product explicit use/display, or clear sexualized graphics/text.
 ANSA requires explicit adult nudity or sexual activities, such as nipple/genital/anus exposure, full nude buttocks with complete butt crack, explicit sexual activity, simulated intercourse, masturbation, or explicit adult product use/display.
 Weak sexual metaphor or ordinary product demonstration should not be strict vulgar unless sexual intent is explicit in composition, text, or use scenario.
-If the visible image is clearly adult-product-oriented, nude-like, or unsuitable for both new and existing users, use strict_vulgar_or_ansa instead of new_guest_vulgar_visual.
+If the visible image clearly contains explicit adult product use/display, explicit private-part exposure, sexual activity, explicit nude body exposure, or clear sexualized graphics/text that is unsuitable for both new and existing users, use strict_vulgar_or_ansa instead of new_guest_vulgar_visual.
+Do not upgrade to strict_vulgar_or_ansa only because the image is body-focused, buttock-focused, nude-like mannequin-style, shapewear-focused, silicone shaping-product-focused, or visually sexy.
 
 child_sexualization:
 Highest priority and must remain in scope.
@@ -88,7 +90,11 @@ Hit when image visibly contains sensitive political symbols, flags, figures, or 
 Use visible evidence only.
 
 prohibited:
-Current batch only supports weapon-related prohibited risk for new-user strategy.
+Current batch supports weapon-related prohibited risk and realistic replica-currency risk.
+Mark prohibited when the image visibly shows weapons, realistic weapon replicas, firearm-like products, or weapon-related items that create platform risk.
+Mark prohibited when the image shows realistic-looking banknotes, replica currency, prop money, copy money, motion-picture banknotes, or similar money-like items that may create counterfeit-currency or misuse risk.
+This applies even when the item is labeled COPY, prop, movie, novelty, educational, or play money if it visually resembles real currency.
+Do not mark prohibited for clearly non-realistic toy money, cartoon money, game tokens, or decorative money patterns that ordinary users would not confuse with real currency.
 Medicine, health supplements, and similar prohibited categories are out of current model scope unless policy is supplied.
 
 sensitive_word:
@@ -97,22 +103,34 @@ Use OCR-visible text only. Do not infer text that is not visible.
 
 crude:
 Hit when visible text or graphic uses a clear vulgar metaphor, sexual pun, or double meaning.
+Visible profanity, sexual insult, vulgar slang, or crude wording should be marked crude when it is part of the product image text.
+Words such as bitch should normally trigger crude unless the case is covered by an explicit brand whitelist.
+PLOUISE brand phrase Bad Bitch Energy is currently whitelisted as no_issue based on human review feedback. This is a narrow brand whitelist and must not be generalized to other brands or other uses of bitch.
 Do not mark crude from weak or ambiguous association.
 
 no_package:
 Hit when food is directly shown without packaging and creates hygiene or platform risk.
 If edible food is clearly exposed without protective packaging, wrapping, sealed container, or hygienic presentation, mark no_package rather than no_issue.
+If the product cover image uses exposed food as the selling display and there is no visible protective packaging, treat it as no_package rather than ordinary serving context.
+Food on a tray, paper cup, plate, or other non-sealed presentation can still be no_package when the cover image creates hygiene or platform trust risk.
 
 uncomfortable:
 Hit when the product image contains uncanny body parts, visceral food/tableware, realistic organs, realistic teeth/eyes/tongue, body fluids, feces/vomit simulation, gore, or strong disgust/uncanny visual effect.
-Normal Halloween, medical/education models, normal creative design, and cute-style products are not uncomfortable unless realistic disgust or uncanny effect is clear.
+Hit when severe hair loss, exposed scalp thinning, hair shedding, bald patches, dandruff-like scalp debris, disturbing before/after body-condition contrast, or similar body-condition anxiety visual is used as the main selling point.
+Hit when skeleton, skull, death, or mortality-related imagery creates immediate visual discomfort as the product selling point, even if it is Halloween-themed, when the first-view effect is strongly unsettling for new users.
+Normal cute-style, ordinary Halloween, ordinary hair-care packaging, mild non-graphic hair comparison, medical/education models, normal creative design, and cute-style products are not uncomfortable unless realistic disgust, strong body-condition discomfort, or strong uncanny effect is clear.
+The medical/education exemption does not apply when a commercial product ad uses unpleasant body-condition visuals, such as severe hair loss or exposed scalp, as persuasion for the product.
 Hit when the product image uses disgusting, nauseating, grotesque, or physically uncomfortable visual effect as a main selling point.
 
 novelty:
 Hit for products designed mainly for shock, controversy, or platform-unfriendly novelty that may harm ordinary user experience.
+Do not use novelty as a downgrade or false-positive exemption when a more specific positive rule is met, such as lgbt_related, crude, prohibited, no_package, or uncomfortable.
 
 lgbt_related:
 For current strategy, LGBT-related visual/text elements can be new-guest-only risk depending on business policy. Do not treat as universal violation without policy.
+Prominent LGBT identity text or symbols used as the core product message should be marked lgbt_related. Examples include GAY, LGBT, PRIDE, lesbian, bisexual, transgender, queer, or a clearly recognizable six-color Pride/rainbow flag.
+Generic rainbow colors, decorative gradients, sci-fi rainbow patterns, or ordinary colorful designs are not lgbt_related unless there is a clear LGBT identity signal such as LGBT wording, Pride flag usage, or explicit sexual-orientation/gender-identity reference.
+Novelty, joke-card, meme, or collectible presentation is not a false-positive exemption for lgbt_related when the LGBT signal is explicit and central to the product.
 
 new_issue_supplement:
 Use only when there is a clear visible issue that does not fit any allowed type.

@@ -1,5 +1,5 @@
 {
-  "version": "pir-v4.2-20260721-ground-truth",
+  "version": "pir-v4.2-20260724-human-review",
   "project": "product-image-review",
   "description": "Structured Rules Brain rules for PIR v4.2. These rules focus on suspected IPR, low quality, and vulgar/ANSA false-positive control for new-customer product image review.",
   "source_context": {
@@ -163,19 +163,24 @@
       "display_name": "无包装食品",
       "business_layer": "universal_high_confidence",
       "applicable_users": "new_and_existing_users_after_standard_confirmation",
-      "decision_policy": "Mark no_package when edible food is visibly sold or presented without packaging in a way that creates hygiene or platform trust risk.",
+      "decision_policy": "Mark no_package when edible food is visibly sold or presented without packaging in a way that creates hygiene or platform trust risk. If the product cover image uses exposed food as the selling display and there is no visible protective packaging, treat it as no_package rather than ordinary serving context.",
       "positive_rules": [
         {
           "id": "NP-01",
           "name": "Unpackaged Food",
           "rule": "Mark no_package when the product image clearly shows food directly exposed without protective packaging, wrapping, sealed container, or hygienic presentation."
+        },
+        {
+          "id": "NP-02",
+          "name": "Cover Image Exposed Food",
+          "rule": "Mark no_package when the cover image sells edible food through exposed food display without visible protective packaging, even if the food is on a tray, paper cup, plate, or other non-sealed presentation that still creates hygiene or platform trust risk."
         }
       ],
       "false_positive_rules": [
         {
           "id": "NP-FP-01",
           "name": "Packaged Or Serving Context",
-          "rule": "Do not mark no_package when food is visibly packaged, sealed, displayed in normal serving/tableware context, or the lack of packaging is not clear from the image."
+          "rule": "Do not mark no_package when food is visibly packaged, sealed, or the lack of packaging is not clear from the image. Normal serving/tableware context is only a false-positive boundary when the image is not using exposed food as the product cover selling point."
         }
       ],
       "output_guidance": "Use no_package for clearly unpackaged food rather than no_issue. Describe the visible lack of packaging."
@@ -184,7 +189,7 @@
       "display_name": "怪异/不适",
       "business_layer": "universal_high_confidence",
       "applicable_users": "new_and_existing_users_after_standard_confirmation",
-      "decision_policy": "Mark uncomfortable when the image intentionally uses strong disgust, grotesque, uncanny, or physically uncomfortable visuals as the selling point.",
+      "decision_policy": "Mark uncomfortable when the image intentionally uses strong disgust, grotesque, uncanny, body-condition anxiety, mortality-related, or physically uncomfortable visuals as the selling point.",
       "positive_rules": [
         {
           "id": "UF-01",
@@ -195,13 +200,28 @@
           "id": "UF-02",
           "name": "Uncanny Body Or Fluid Visual",
           "rule": "Mark uncomfortable for uncanny body parts, realistic organs, realistic teeth/eyes/tongue, body fluids, feces/vomit simulation, gore, or similar strong discomfort cues."
+        },
+        {
+          "id": "UF-03",
+          "name": "Body-Condition Discomfort Selling Point",
+          "rule": "Mark uncomfortable when severe hair loss, exposed scalp thinning, hair shedding, bald patches, dandruff-like scalp debris, disturbing before/after body-condition contrast, or similar body-condition anxiety visual is used as the main selling point."
+        },
+        {
+          "id": "UF-04",
+          "name": "Skeleton Or Mortality Visual Shock",
+          "rule": "Mark uncomfortable when skeleton, skull, death, or mortality-related imagery creates immediate visual discomfort as the product selling point, even if it is Halloween-themed, when the first-view effect is strongly unsettling for new users."
         }
       ],
       "false_positive_rules": [
         {
           "id": "UF-FP-01",
           "name": "Cute Or Normal Creative Design",
-          "rule": "Do not mark uncomfortable for normal cute-style, ordinary Halloween, medical/education models, or harmless creative design unless realistic disgust or strong uncanny effect is clear."
+          "rule": "Do not mark uncomfortable for normal cute-style, ordinary Halloween, ordinary hair-care packaging, mild non-graphic hair comparison, medical/education models, or harmless creative design unless realistic disgust, strong body-condition discomfort, or strong uncanny effect is clear."
+        },
+        {
+          "id": "UF-FP-02",
+          "name": "Medical Education Exemption Boundary",
+          "rule": "The medical/education exemption does not apply when a commercial product ad uses unpleasant body-condition visuals, such as severe hair loss or exposed scalp, as persuasion for the product."
         }
       ],
       "output_guidance": "If the visible product appeal is to make users feel grossed out or uncomfortable, keep uncomfortable instead of no_issue."
@@ -210,7 +230,7 @@
       "display_name": "新客低俗色情/边缘性感画风",
       "business_layer": "new_guest_only",
       "applicable_users": "new_users_only",
-      "decision_policy": "Use this layer for new-user visual strategy intervention when the image may affect first-time user perception but does not meet strict vulgar/ANSA criteria. Do not use this layer for adult products or nude-like sexualized imagery that is unsuitable for both new and existing users.",
+      "decision_policy": "Use this layer for new-user visual strategy intervention when the image may affect first-time user perception but does not meet strict vulgar/ANSA criteria. Buttock-focused shapewear, leggings, underwear-like display, mannequin lower-body display, silicone shaping garment, or body-enhancing product display should usually stay in new_guest_vulgar_visual when there is no explicit private-part exposure, sexual act, adult product use scenario, or explicit nudity.",
       "positive_rules": [
         {
           "id": "NGV-01",
@@ -221,6 +241,11 @@
           "id": "NGV-02",
           "name": "Adult-Oriented Product",
           "rule": "Adult-oriented products or sexual-style apparel may be routed to new_guest_vulgar_visual when not explicit enough for strict vulgar/ANSA."
+        },
+        {
+          "id": "NGV-03",
+          "name": "Shapewear Or Mannequin Lower-Body Display",
+          "rule": "Route buttock-focused shapewear, leggings, underwear-like display, mannequin lower-body display, silicone shaping garment, or body-enhancing product display to new_guest_vulgar_visual when the concern is new-user visual suitability and there is no explicit private-part exposure, sexual activity, adult product use scenario, or explicit nudity."
         }
       ],
       "false_positive_rules": [
@@ -232,7 +257,7 @@
         {
           "id": "NGV-FP-02",
           "name": "Adult Or Existing-User Unsuitable Content",
-          "rule": "Do not keep new_guest_vulgar_visual when the visible image is clearly adult-product-oriented, nude-like, or unsuitable for both new and existing users. Upgrade to strict_vulgar_or_ansa when explicit adult product, private-part, nude-like, or clearly sexualized evidence is visible."
+          "rule": "Do not keep new_guest_vulgar_visual when the visible image contains explicit adult product use/display, explicit private-part exposure, sexual activity, or explicit nudity that is unsuitable for both new and existing users. Do not upgrade to strict_vulgar_or_ansa only because the image is body-focused, buttock-focused, nude-like mannequin-style, shapewear-focused, or visually sexy."
         }
       ],
       "output_guidance": "Separate this from strict_vulgar_or_ansa. This is for new-user strategy intervention."
@@ -241,7 +266,7 @@
       "display_name": "严格低俗色情/成人露骨问题",
       "business_layer": "standard_needs_tightening",
       "applicable_users": "new_and_existing_users_after_standard_confirmation",
-      "decision_policy": "Strict vulgar/ANSA requires explicit evidence, not general sexy apparel display.",
+      "decision_policy": "Strict vulgar/ANSA requires explicit evidence, not general sexy apparel display. Do not upgrade body-focused or shapewear/mannequin display to strict_vulgar_or_ansa unless explicit private-part exposure, sexual activity, adult product use/display, explicit nudity, or clear sexualized graphics/text is visible.",
       "positive_rules": [
         {
           "id": "VG-01",
@@ -266,7 +291,7 @@
         {
           "id": "VG-04",
           "name": "Adult Product Or Nude-Like Existing-User Risk",
-          "rule": "Mark strict_vulgar_or_ansa when the product image clearly shows an adult-oriented product, nude-like display, or sexualized imagery that is unsuitable for both new and existing users, even if the previous borderline layer would have been new_guest_vulgar_visual."
+          "rule": "Mark strict_vulgar_or_ansa when the product image clearly shows an adult-oriented product use/display, explicit nude exposure, private-part imagery, sexual act, or sexualized imagery that is unsuitable for both new and existing users, even if the previous borderline layer would have been new_guest_vulgar_visual."
         }
       ],
       "false_positive_rules": [
@@ -284,9 +309,186 @@
           "id": "VG-FP-03",
           "name": "Weak Metaphor",
           "rule": "Weak sexual metaphor or ordinary product demonstration should not be strict vulgar unless the sexual intent is explicit in composition, text, or use scenario."
+        },
+        {
+          "id": "VG-FP-04",
+          "name": "Body-Focused Display Not Enough",
+          "rule": "Do not upgrade to strict_vulgar_or_ansa only because the image is body-focused, buttock-focused, nude-like mannequin-style, shapewear-focused, silicone shaping-product-focused, or visually sexy. Without explicit private-part exposure, sexual activity, explicit adult product use/display, or explicit nudity, route to new_guest_vulgar_visual instead."
         }
       ],
       "output_guidance": "If the case is borderline or only unsuitable for new users, route to new_guest_vulgar_visual instead of strict_vulgar_or_ansa."
+    },
+    "prohibited": {
+      "display_name": "禁限售",
+      "business_layer": "new_guest_only",
+      "applicable_users": "new_and_existing_users_after_policy_confirmation",
+      "decision_policy": "Current PIR strategy includes weapon-related risk and realistic replica currency risk. Mark prohibited when the product image visibly shows realistic banknotes, replica currency, prop money, copy money, motion-picture banknotes, or similar money-like items that may create counterfeit-currency or misuse risk.",
+      "positive_rules": [
+        {
+          "id": "PB-01",
+          "name": "Weapon-Related Prohibited Risk",
+          "rule": "Mark prohibited when the image visibly shows weapons, realistic weapon replicas, firearm-like products, or weapon-related items that create platform risk."
+        },
+        {
+          "id": "PB-02",
+          "name": "Replica Currency Or Prop Money",
+          "rule": "Mark prohibited when the image shows realistic-looking banknotes, replica currency, prop money, copy money, motion-picture banknotes, or similar money-like items that may create counterfeit-currency or misuse risk. This rule applies even when the item is labeled COPY, prop, movie, novelty, educational, or play money if it visually resembles real currency."
+        }
+      ],
+      "false_positive_rules": [
+        {
+          "id": "PB-FP-01",
+          "name": "Non-Realistic Toy Boundary",
+          "rule": "Do not mark prohibited for clearly non-realistic toy money, cartoon money, game tokens, or decorative money patterns that ordinary users would not confuse with real currency."
+        }
+      ],
+      "output_guidance": "Use prohibited for visible replica currency or realistic prop money rather than suspected_ipr or no_issue. Explain the visible currency-like evidence, including COPY or motion-picture markings when present."
+    },
+    "sensitive_word": {
+      "display_name": "敏感词",
+      "business_layer": "universal_high_confidence",
+      "applicable_users": "new_and_existing_users_after_standard_confirmation",
+      "decision_policy": "Mark sensitive_word when OCR-visible text contains political sensitive words, hate or insulting words, prohibited sensitive text, or other high-risk text that is not better categorized as crude sexual/vulgar wording.",
+      "positive_rules": [
+        {
+          "id": "SW-01",
+          "name": "Visible Sensitive Text",
+          "rule": "Mark sensitive_word when image text visibly contains political sensitive words, hate or insulting words, or clearly prohibited sensitive wording."
+        }
+      ],
+      "false_positive_rules": [
+        {
+          "id": "SW-FP-01",
+          "name": "Unreadable Or Inferred Text",
+          "rule": "Do not mark sensitive_word from unreadable, inferred, title-only, or category-only text. Use OCR-visible image text only."
+        }
+      ],
+      "output_guidance": "Quote or summarize the visible text that triggered sensitive_word."
+    },
+    "crude": {
+      "display_name": "暗喻敏感词",
+      "business_layer": "universal_high_confidence",
+      "applicable_users": "new_and_existing_users_after_standard_confirmation",
+      "decision_policy": "Mark crude when visible product image text or graphics use profanity, sexual insult, vulgar slang, crude wording, sexual pun, or explicit double meaning that is not already strict_vulgar_or_ansa.",
+      "positive_rules": [
+        {
+          "id": "CR-01",
+          "name": "Visible Profanity Or Vulgar Slang",
+          "rule": "Visible profanity, sexual insult, vulgar slang, or crude wording should be marked crude when it is part of the product image text. Words such as bitch should normally trigger crude unless the case is covered by an explicit brand whitelist."
+        },
+        {
+          "id": "CR-02",
+          "name": "Sexual Pun Or Double Meaning",
+          "rule": "Mark crude when visible text or graphic uses a clear sexual pun, vulgar metaphor, or double meaning, even if it is presented as a joke product."
+        }
+      ],
+      "false_positive_rules": [
+        {
+          "id": "CR-FP-01",
+          "name": "Weak Or Ambiguous Association",
+          "rule": "Do not mark crude from weak, ambiguous, or inferred association when the visible text itself is not profane or sexually/vulgarly meaningful."
+        },
+        {
+          "id": "CR-FP-02",
+          "name": "PLOUISE Brand Whitelist",
+          "rule": "PLOUISE brand phrase Bad Bitch Energy is currently whitelisted as no_issue based on human review feedback. This is a narrow brand whitelist and must not be generalized to other brands or other uses of bitch."
+        }
+      ],
+      "output_guidance": "Use crude for visible profanity or vulgar slang. Mention if the narrow PLOUISE brand whitelist applies."
+    },
+    "lgbt_related": {
+      "display_name": "LGBT相关",
+      "business_layer": "new_guest_only",
+      "applicable_users": "new_users_only_policy_pending",
+      "decision_policy": "For current strategy, explicit LGBT-related visual/text elements that are central to the product concept should be marked lgbt_related as new-guest-only policy-pending risk. Do not downgrade only because the item is novelty, joke-card, meme, or collectible merchandise when the LGBT signal is explicit and central.",
+      "positive_rules": [
+        {
+          "id": "LGBT-01",
+          "name": "Explicit LGBT Identity Text Or Symbol",
+          "rule": "Prominent LGBT identity text or symbols used as the core product message should be marked lgbt_related. Examples include GAY, LGBT, PRIDE, lesbian, bisexual, transgender, queer, or a clearly recognizable six-color Pride/rainbow flag."
+        },
+        {
+          "id": "LGBT-02",
+          "name": "Central Product Concept",
+          "rule": "Mark lgbt_related when LGBT wording, Pride flag usage, or sexual-orientation/gender-identity reference is the main product message, not a tiny incidental decoration."
+        }
+      ],
+      "false_positive_rules": [
+        {
+          "id": "LGBT-FP-01",
+          "name": "Generic Rainbow Boundary",
+          "rule": "Do not mark generic rainbow colors, decorative gradients, sci-fi rainbow patterns, or ordinary colorful design as lgbt_related unless there is a clear LGBT identity signal such as LGBT wording, Pride flag usage, or explicit sexual-orientation/gender-identity reference."
+        },
+        {
+          "id": "LGBT-FP-02",
+          "name": "Novelty Is Not Exemption",
+          "rule": "Novelty, joke-card, meme, or collectible presentation is not a false-positive exemption for lgbt_related when the LGBT signal is explicit and central to the product."
+        }
+      ],
+      "output_guidance": "If the image prominently shows terms like GAY or a six-color Pride/rainbow flag as the product concept, use lgbt_related with business_layer policy_pending or new_guest_only rather than no_issue."
+    },
+    "novelty": {
+      "display_name": "猎奇商品",
+      "business_layer": "universal_high_confidence",
+      "applicable_users": "new_and_existing_users_after_standard_confirmation",
+      "decision_policy": "Mark novelty for products designed mainly for shock, controversy, or platform-unfriendly novelty that may harm ordinary user experience and are not better covered by uncomfortable, crude, prohibited, lgbt_related, or another allowed issue type.",
+      "positive_rules": [
+        {
+          "id": "NV-01",
+          "name": "Shock Or Controversy Novelty",
+          "rule": "Mark novelty when the product concept is mainly shock, controversy, or platform-unfriendly novelty and no more specific allowed issue type fits."
+        }
+      ],
+      "false_positive_rules": [
+        {
+          "id": "NV-FP-01",
+          "name": "Use Specific Type First",
+          "rule": "Do not use novelty as a downgrade or false-positive exemption when a more specific positive rule is met, such as lgbt_related, crude, prohibited, no_package, or uncomfortable."
+        }
+      ],
+      "output_guidance": "Use novelty only after checking more specific issue types."
+    },
+    "child_sexualization": {
+      "display_name": "儿童性化",
+      "business_layer": "highest_priority",
+      "applicable_users": "new_and_existing_users_zero_tolerance",
+      "decision_policy": "Child sexualization remains highest priority and must be marked whenever visible child or child-like figures are sexualized.",
+      "positive_rules": [
+        {
+          "id": "CS-01",
+          "name": "Sexualized Child Or Child-Like Figure",
+          "rule": "Mark child_sexualization for any sexualized child model, child-like cartoon character in sexualized pose, child-like character with sexualized body features, or child image in adult sexual context."
+        }
+      ],
+      "false_positive_rules": [
+        {
+          "id": "CS-FP-01",
+          "name": "No Sexualization",
+          "rule": "Do not mark child_sexualization when the image shows ordinary child-related products or child-like characters without sexual pose, sexual context, or sexualized body features."
+        }
+      ],
+      "output_guidance": "When child_sexualization is suspected, mark has_problem true and route for serious review."
+    },
+    "politically_sensitive": {
+      "display_name": "政治敏感",
+      "business_layer": "universal_high_confidence",
+      "applicable_users": "new_and_existing_users_after_standard_confirmation",
+      "decision_policy": "Mark politically_sensitive when visible image elements contain sensitive political symbols, flags, figures, slogans, or event-related content.",
+      "positive_rules": [
+        {
+          "id": "PS-01",
+          "name": "Visible Political Sensitive Content",
+          "rule": "Mark politically_sensitive when image visibly contains sensitive political symbols, flags, figures, slogans, or event-related content."
+        }
+      ],
+      "false_positive_rules": [
+        {
+          "id": "PS-FP-01",
+          "name": "Do Not Infer Politics",
+          "rule": "Do not mark politically_sensitive from title/category, inferred context, or generic national colors when no visible sensitive political content exists."
+        }
+      ],
+      "output_guidance": "Use visible evidence only and state the visible political signal."
     }
   },
   "excluded_current_scope": [
