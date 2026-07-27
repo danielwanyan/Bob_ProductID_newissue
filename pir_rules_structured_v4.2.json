@@ -1,11 +1,12 @@
 {
-  "version": "pir-v4.2-20260724-human-review",
+  "version": "pir-v4.2-20260727-human-review-vulgar-animal-boundary",
   "project": "product-image-review",
   "description": "Structured Rules Brain rules for PIR v4.2. These rules focus on suspected IPR, low quality, and vulgar/ANSA false-positive control for new-customer product image review.",
   "source_context": {
     "workflow": "EU_productid_Bizzard / Product Image Review",
     "scope": "Aicolate Rules Brain dynamic rules_context",
-    "price_rpc_current_limit": "RPC currently provides min_price, max_price, and currency. For suspected_ipr v4.2, LLM may use broad world knowledge only for rough price reasonableness after a visible global famous brand/IP signal exists."
+    "price_rpc_current_limit": "RPC currently provides min_price, max_price, and currency. For suspected_ipr v4.2, LLM may use broad world knowledge only for rough price reasonableness after a visible global famous brand/IP signal exists.",
+    "latest_human_review": "/Users/bytedance/Downloads/PIR_10PID_Rule_Brain_Dynamic_20260724_1055_Review_manual_reviews.json"
   },
   "issue_types": {
     "suspected_ipr": {
@@ -230,7 +231,7 @@
       "display_name": "新客低俗色情/边缘性感画风",
       "business_layer": "new_guest_only",
       "applicable_users": "new_users_only",
-      "decision_policy": "Use this layer for new-user visual strategy intervention when the image may affect first-time user perception but does not meet strict vulgar/ANSA criteria. Buttock-focused shapewear, leggings, underwear-like display, mannequin lower-body display, silicone shaping garment, or body-enhancing product display should usually stay in new_guest_vulgar_visual when there is no explicit private-part exposure, sexual act, adult product use scenario, or explicit nudity.",
+      "decision_policy": "Use this layer for new-user visual strategy intervention when the image may affect first-time user perception but does not meet strict vulgar/ANSA criteria. Buttock-focused shapewear, leggings, underwear-like display, mannequin lower-body display, silicone shaping garment, or body-enhancing product display should usually stay in new_guest_vulgar_visual when there is no explicit private-part exposure, sexual act, adult product use scenario, explicit nudity, or over-exposed private-area/crotch/buttock focus that is unsuitable for both new and existing users.",
       "positive_rules": [
         {
           "id": "NGV-01",
@@ -257,7 +258,7 @@
         {
           "id": "NGV-FP-02",
           "name": "Adult Or Existing-User Unsuitable Content",
-          "rule": "Do not keep new_guest_vulgar_visual when the visible image contains explicit adult product use/display, explicit private-part exposure, sexual activity, or explicit nudity that is unsuitable for both new and existing users. Do not upgrade to strict_vulgar_or_ansa only because the image is body-focused, buttock-focused, nude-like mannequin-style, shapewear-focused, or visually sexy."
+          "rule": "Do not keep new_guest_vulgar_visual when the visible image contains explicit adult product use/display, explicit private-part exposure, sexual activity, explicit nudity, or over-exposed revealing underwear/private-area/crotch/buttock focus that is unsuitable for both new and existing users. Do not upgrade to strict_vulgar_or_ansa only because the image is body-focused, buttock-focused, nude-like mannequin-style, shapewear-focused, or visually sexy unless the over-exposure/private-area focus crosses the existing-user-unsuitable boundary."
         }
       ],
       "output_guidance": "Separate this from strict_vulgar_or_ansa. This is for new-user strategy intervention."
@@ -266,7 +267,7 @@
       "display_name": "严格低俗色情/成人露骨问题",
       "business_layer": "standard_needs_tightening",
       "applicable_users": "new_and_existing_users_after_standard_confirmation",
-      "decision_policy": "Strict vulgar/ANSA requires explicit evidence, not general sexy apparel display. Do not upgrade body-focused or shapewear/mannequin display to strict_vulgar_or_ansa unless explicit private-part exposure, sexual activity, adult product use/display, explicit nudity, or clear sexualized graphics/text is visible.",
+      "decision_policy": "Strict vulgar/ANSA requires explicit evidence, not general sexy apparel display. Do not upgrade body-focused or shapewear/mannequin display to strict_vulgar_or_ansa unless explicit private-part exposure, sexual activity, adult product use/display, explicit nudity, clear sexualized graphics/text, or over-exposed private-area/crotch/buttock focus unsuitable for both new and existing users is visible.",
       "positive_rules": [
         {
           "id": "VG-01",
@@ -292,6 +293,11 @@
           "id": "VG-04",
           "name": "Adult Product Or Nude-Like Existing-User Risk",
           "rule": "Mark strict_vulgar_or_ansa when the product image clearly shows an adult-oriented product use/display, explicit nude exposure, private-part imagery, sexual act, or sexualized imagery that is unsuitable for both new and existing users, even if the previous borderline layer would have been new_guest_vulgar_visual."
+        },
+        {
+          "id": "VG-05",
+          "name": "Over-Exposed Existing-User Unsuitable Underwear Display",
+          "rule": "Mark strict_vulgar_or_ansa when underwear, swimwear, or body-display imagery is too revealing or over-exposed, with strong crotch, buttock, or private-area focus, and is unsuitable for both new and existing users even if full nudity is not visible."
         }
       ],
       "false_positive_rules": [
@@ -313,26 +319,31 @@
         {
           "id": "VG-FP-04",
           "name": "Body-Focused Display Not Enough",
-          "rule": "Do not upgrade to strict_vulgar_or_ansa only because the image is body-focused, buttock-focused, nude-like mannequin-style, shapewear-focused, silicone shaping-product-focused, or visually sexy. Without explicit private-part exposure, sexual activity, explicit adult product use/display, or explicit nudity, route to new_guest_vulgar_visual instead."
+          "rule": "Do not upgrade to strict_vulgar_or_ansa only because the image is body-focused, buttock-focused, nude-like mannequin-style, shapewear-focused, silicone shaping-product-focused, or visually sexy. Without explicit private-part exposure, sexual activity, explicit adult product use/display, explicit nudity, or over-exposed private-area focus that is unsuitable for both new and existing users, route to new_guest_vulgar_visual instead."
         }
       ],
-      "output_guidance": "If the case is borderline or only unsuitable for new users, route to new_guest_vulgar_visual instead of strict_vulgar_or_ansa."
+      "output_guidance": "If the case is borderline or only unsuitable for new users, route to new_guest_vulgar_visual instead of strict_vulgar_or_ansa. If the visible underwear/body display is too revealing or over-exposed and unsuitable for both new and existing users, use strict_vulgar_or_ansa."
     },
     "prohibited": {
       "display_name": "禁限售",
       "business_layer": "new_guest_only",
       "applicable_users": "new_and_existing_users_after_policy_confirmation",
-      "decision_policy": "Current PIR strategy includes weapon-related risk and realistic replica currency risk. For weapon-related risk, mark prohibited only when the image shows a functional weapon, a realistic usable weapon replica, or firearm-like product without clear toy, water-play, decorative, miniature, jewelry, charm, or ornament context. Mark prohibited when the product image visibly shows realistic banknotes, replica currency, prop money, copy money, motion-picture banknotes, or similar money-like items that may create counterfeit-currency or misuse risk.",
+      "decision_policy": "Current PIR strategy includes weapon-related risk, realistic replica currency risk, and suspected smuggled/restricted live-animal risk. For weapon-related risk, mark prohibited when the image visibly shows a functional weapon, a realistic usable weapon replica, a water gun, a high-pressure water gun, a water/foam cleaning gun, or a firearm-like product. Water-gun and water/foam cleaning-tool context does not exempt the item. Copper/brass gun-shaped products also remain prohibited even when presented as decorative, miniature, jewelry, charm, ornament, dollhouse, or collectible items. Mark prohibited when the product image visibly shows realistic banknotes, replica currency, prop money, copy money, motion-picture banknotes, or similar money-like items that may create counterfeit-currency or misuse risk. Mark prohibited when the product image visibly shows a live lizard/reptile or other exotic/regulated live animal being sold or transported in a way that raises suspected smuggling or restricted wildlife trade risk.",
       "positive_rules": [
         {
           "id": "PB-01",
           "name": "Weapon-Related Prohibited Risk",
-          "rule": "Mark prohibited when the image visibly shows functional weapons, realistic usable weapon replicas, firearm-like products, or weapon-related items that create platform risk and are not clearly toy, water-play, decorative, miniature, jewelry, charm, or ornament products."
+          "rule": "Mark prohibited when the image visibly shows functional weapons, realistic usable weapon replicas, water guns, high-pressure water guns, water/foam cleaning guns, firearm-like products, or copper/brass gun-shaped products. Water-gun, water/foam cleaning-tool, decorative, miniature, jewelry, charm, ornament, dollhouse, or collectible context does not exempt water guns, high-pressure water guns, water/foam cleaning guns, or copper/brass gun-shaped products."
         },
         {
           "id": "PB-02",
           "name": "Replica Currency Or Prop Money",
           "rule": "Mark prohibited when the image shows realistic-looking banknotes, replica currency, prop money, copy money, motion-picture banknotes, or similar money-like items that may create counterfeit-currency or misuse risk. This rule applies even when the item is labeled COPY, prop, movie, novelty, educational, or play money if it visually resembles real currency."
+        },
+        {
+          "id": "PB-03",
+          "name": "Suspected Smuggled Or Restricted Live Animal",
+          "rule": "Mark prohibited when the product image visibly shows a live lizard, reptile, or other exotic/regulated live animal offered as the product, especially when the presentation suggests suspected smuggling, restricted wildlife trade, or illegal live-animal sale. Title/category metadata may only route attention and must not create the hit without visible animal evidence."
         }
       ],
       "false_positive_rules": [
@@ -343,16 +354,21 @@
         },
         {
           "id": "PB-FP-02",
-          "name": "Water Gun And Toy Blaster Boundary",
-          "rule": "Do not mark prohibited for water gun, high pressure water gun, toy blaster, toy foam dart gun, or clearly labeled toy/water-play products when the visual design is clearly non-real firearm and the product context is toy or water play."
+          "name": "Clearly Non-Realistic Toy Blaster Boundary",
+          "rule": "Do not mark prohibited for clearly non-realistic toy blasters, toy foam dart guns, or cartoon toy weapons when the visual design is clearly non-real firearm. This exception does not apply to water guns, high-pressure water guns, water/foam cleaning guns, or copper/brass gun-shaped products."
         },
         {
           "id": "PB-FP-03",
           "name": "Decorative Miniature Weapon-Shaped Boundary",
-          "rule": "Do not mark prohibited for clearly decorative weapon-shaped products, miniature weapon charms, jewelry, ornaments, copper/brass decorative gun items, dollhouse accessories, collectibles, or toys when they are visibly non-functional and not realistic usable weapons."
+          "rule": "Do not mark prohibited for clearly non-functional decorative weapon-shaped products, miniature weapon charms, jewelry, ornaments, dollhouse accessories, collectibles, or toys when they are not realistic usable weapons. This exception does not apply to water guns, high-pressure water guns, water/foam cleaning guns, or copper/brass gun-shaped products."
+        },
+        {
+          "id": "PB-FP-04",
+          "name": "Animal Illustration Or Pet-Supply Boundary",
+          "rule": "Do not mark prohibited for cartoon animals, animal prints, plush toys, figurines, decorations, educational pictures, ordinary pet supplies, or non-live animal-themed products when no live or restricted animal sale is visible."
         }
       ],
-      "output_guidance": "Use prohibited for visible replica currency or realistic prop money rather than suspected_ipr or no_issue. For weapon-shaped products, first check whether the image clearly indicates water gun, toy, decorative, miniature, jewelry, charm, ornament, or non-functional accessory context; if so, downgrade to no_issue/clean. Explain the visible currency-like or weapon-like evidence, including COPY or motion-picture markings when present."
+      "output_guidance": "Use prohibited for visible replica currency or realistic prop money rather than suspected_ipr or no_issue. For weapon-shaped products, water guns, high-pressure water guns, water/foam cleaning guns, and copper/brass gun-shaped products remain prohibited despite water-play, cleaning-tool, decorative, miniature, jewelry, charm, ornament, dollhouse, collectible, or non-functional context. Only clearly non-realistic toy blasters, toy foam dart guns, or cartoon toy weapons may use the toy false-positive boundary. For suspected smuggled/restricted live animals, explain the visible animal evidence and why it appears to be a live-animal sale risk. Explain the visible currency-like, weapon-like, or live-animal evidence, including COPY or motion-picture markings when present."
     },
     "sensitive_word": {
       "display_name": "敏感词",

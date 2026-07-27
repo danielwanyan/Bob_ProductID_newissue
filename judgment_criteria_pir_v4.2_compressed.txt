@@ -73,12 +73,12 @@ Separate new-customer visual risk from strict vulgar or ANSA.
 Normal apparel display, sexy clothing, deep-V clothing, leggings, shorts, swimwear, body-fit clothing, and normal underwear display are not strict vulgar by themselves.
 If the image mainly shows apparel/product display and there is no explicit private-part exposure or sexual act, do not mark strict vulgar.
 Borderline sexy apparel, buttock-focused fashion display, deep-V fashion display, adult-oriented product display, or platform-style concern can be new_guest_vulgar_visual when unsuitable for new-user recommendation.
-Buttock-focused shapewear, leggings, underwear-like display, mannequin lower-body display, silicone shaping garment, or body-enhancing product display should usually stay in new_guest_vulgar_visual when there is no explicit private-part exposure, sexual act, adult product use scenario, or explicit nudity.
-strict_vulgar_or_ansa requires explicit evidence: sexualized body-part focus, explicit private-part exposure, explicit sexual activity, adult product explicit use/display, or clear sexualized graphics/text.
+Buttock-focused shapewear, leggings, underwear-like display, mannequin lower-body display, silicone shaping garment, or body-enhancing product display should usually stay in new_guest_vulgar_visual when there is no explicit private-part exposure, sexual act, adult product use scenario, explicit nudity, or over-exposed private-area/crotch/buttock focus that is unsuitable for both new and existing users.
+strict_vulgar_or_ansa requires explicit evidence: sexualized body-part focus, explicit private-part exposure, explicit sexual activity, adult product explicit use/display, clear sexualized graphics/text, or over-exposed private-area/crotch/buttock focus unsuitable for both new and existing users.
 ANSA requires explicit adult nudity or sexual activities, such as nipple/genital/anus exposure, full nude buttocks with complete butt crack, explicit sexual activity, simulated intercourse, masturbation, or explicit adult product use/display.
 Weak sexual metaphor or ordinary product demonstration should not be strict vulgar unless sexual intent is explicit in composition, text, or use scenario.
-If the visible image clearly contains explicit adult product use/display, explicit private-part exposure, sexual activity, explicit nude body exposure, or clear sexualized graphics/text that is unsuitable for both new and existing users, use strict_vulgar_or_ansa instead of new_guest_vulgar_visual.
-Do not upgrade to strict_vulgar_or_ansa only because the image is body-focused, buttock-focused, nude-like mannequin-style, shapewear-focused, silicone shaping-product-focused, or visually sexy.
+If the visible image clearly contains explicit adult product use/display, explicit private-part exposure, sexual activity, explicit nude body exposure, clear sexualized graphics/text, or over-exposed revealing underwear/private-area/crotch/buttock focus that is unsuitable for both new and existing users, use strict_vulgar_or_ansa instead of new_guest_vulgar_visual.
+Do not upgrade to strict_vulgar_or_ansa only because the image is body-focused, buttock-focused, nude-like mannequin-style, shapewear-focused, silicone shaping-product-focused, or visually sexy unless the over-exposure/private-area focus crosses the existing-user-unsuitable boundary.
 
 child_sexualization:
 Highest priority and must remain in scope.
@@ -90,13 +90,15 @@ Hit when image visibly contains sensitive political symbols, flags, figures, or 
 Use visible evidence only.
 
 prohibited:
-Current batch supports weapon-related prohibited risk and realistic replica-currency risk.
-Mark prohibited when the image visibly shows functional weapons, realistic usable weapon replicas, firearm-like products, or weapon-related items that create platform risk and are not clearly toy, water-play, decorative, miniature, jewelry, charm, or ornament products.
-Do not mark prohibited for water gun, high pressure water gun, toy blaster, toy foam dart gun, or clearly labeled toy/water-play products when the visual design is clearly non-real firearm and the product context is toy or water play.
-Do not mark prohibited for clearly decorative weapon-shaped products, miniature weapon charms, jewelry, ornaments, copper/brass decorative gun items, dollhouse accessories, collectibles, or toys when they are visibly non-functional and not realistic usable weapons.
+Current batch supports weapon-related prohibited risk, realistic replica-currency risk, and suspected smuggled/restricted live-animal risk.
+Mark prohibited when the image visibly shows functional weapons, realistic usable weapon replicas, water guns, high-pressure water guns, water/foam cleaning guns, firearm-like products, or copper/brass gun-shaped products. Water-gun, water/foam cleaning-tool, decorative, miniature, jewelry, charm, ornament, dollhouse, or collectible context does not exempt water guns, high-pressure water guns, water/foam cleaning guns, or copper/brass gun-shaped products.
+Do not mark prohibited for clearly non-realistic toy blasters, toy foam dart guns, or cartoon toy weapons when the visual design is clearly non-real firearm. This exception does not apply to water guns, high-pressure water guns, water/foam cleaning guns, or copper/brass gun-shaped products.
+Do not mark prohibited for clearly non-functional decorative weapon-shaped products, miniature weapon charms, jewelry, ornaments, dollhouse accessories, collectibles, or toys when they are not realistic usable weapons. This exception does not apply to water guns, high-pressure water guns, water/foam cleaning guns, or copper/brass gun-shaped products.
 Mark prohibited when the image shows realistic-looking banknotes, replica currency, prop money, copy money, motion-picture banknotes, or similar money-like items that may create counterfeit-currency or misuse risk.
 This applies even when the item is labeled COPY, prop, movie, novelty, educational, or play money if it visually resembles real currency.
 Do not mark prohibited for clearly non-realistic toy money, cartoon money, game tokens, or decorative money patterns that ordinary users would not confuse with real currency.
+Mark prohibited when the image visibly shows a live lizard, reptile, or other exotic/regulated live animal offered as the product, especially when the presentation suggests suspected smuggling, restricted wildlife trade, or illegal live-animal sale.
+Do not mark prohibited for cartoon animals, animal prints, plush toys, figurines, decorations, educational pictures, ordinary pet supplies, or non-live animal-themed products when no live or restricted animal sale is visible.
 Medicine, health supplements, and similar prohibited categories are out of current model scope unless policy is supplied.
 
 sensitive_word:
